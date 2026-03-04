@@ -1,8 +1,53 @@
-import { getPayload, type CollectionConfig } from 'payload'
-import config from '@payload-config'
+import { User } from '@/payload-types'
+import { Access, type CollectionConfig } from 'payload'
+import { Admins } from './Admins'
+
+const canReadShifts: Access<User> = ({ req: { user } }) => {
+  // Allow workers to read only their own shifts, admins can read all
+  if (!user) return false
+  if (user.collection === Admins.slug) return true
+  return {
+    worker: {
+      equals: user.id,
+    },
+  }
+}
+
+const canCreateShifts: Access<User> = ({ req: { user } }) => {
+  // Allow authenticated users to create shifts
+  return Boolean(user)
+}
+
+const canUpdateShifts: Access<User> = ({ req: { user } }) => {
+  // Allow workers to update only their own shifts, admins can update all
+  if (!user) return false
+  if (user.collection === Admins.slug) return true
+  return {
+    worker: {
+      equals: user.id,
+    },
+  }
+}
+
+const canDeleteShifts: Access<User> = ({ req: { user } }) => {
+  // Allow workers to delete only their own shifts, admins can delete all
+  if (!user) return false
+  if (user.collection === Admins.slug) return true
+  return {
+    worker: {
+      equals: user.id,
+    },
+  }
+}
 
 export const Shifts: CollectionConfig = {
   slug: 'shifts',
+  access: {
+    read: canReadShifts,
+    create: canCreateShifts,
+    update: canUpdateShifts,
+    delete: canDeleteShifts,
+  },
   fields: [
     {
       name: 'worker',
@@ -82,14 +127,21 @@ export const Shifts: CollectionConfig = {
       type: 'number',
       required: true,
       admin: {
-        description: 'Calculated total price for the shift',
+        readOnly: true,
+      },
+    },
+    {
+      name: 'invoice',
+      type: 'relationship',
+      relationTo: 'invoices',
+      admin: {
+        readOnly: true,
       },
     },
   ],
   hooks: {
     beforeChange: [
-      async ({ data }) => {
-        const payload = await getPayload({ config })
+      async ({ data, req }) => {
         // Calculate total price when creating or updating a shift
         if (!data.startDate || !data.endDate || !data.service) {
           return data
@@ -101,7 +153,7 @@ export const Shifts: CollectionConfig = {
           (end.getTime() - start.getTime()) / (1000 * 60 * 60) - data.breakDuration / 60
 
         // Fetch service rate
-        const service = await payload.findByID({
+        const service = await req.payload.findByID({
           collection: 'services',
           id: data.service,
         })

@@ -63,16 +63,19 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
+    admins: AdminAuthOperations;
     users: UserAuthOperations;
-    clients: ClientAuthOperations;
   };
   blocks: {};
   collections: {
+    admins: Admin;
     users: User;
     media: Media;
     clients: Client;
     services: Service;
     shifts: Shift;
+    invoices: Invoice;
+    logs: Log;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,11 +83,14 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     shifts: ShiftsSelect<false> | ShiftsSelect<true>;
+    invoices: InvoicesSelect<false> | InvoicesSelect<true>;
+    logs: LogsSelect<false> | LogsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -100,10 +106,28 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User | Client;
+  user: Admin | User;
   jobs: {
     tasks: unknown;
     workflows: unknown;
+  };
+}
+export interface AdminAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
   };
 }
 export interface UserAuthOperations {
@@ -124,23 +148,30 @@ export interface UserAuthOperations {
     password: string;
   };
 }
-export interface ClientAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admins".
+ */
+export interface Admin {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'admins';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -148,6 +179,22 @@ export interface ClientAuthOperations {
  */
 export interface User {
   id: number;
+  firstName: string;
+  lastName: string;
+  company: string;
+  phone: string;
+  website?: string | null;
+  address: {
+    streetAndNumber: string;
+    city: string;
+    postalCode: string;
+  };
+  companyRegistrationNumber: string;
+  bankDetails: {
+    name: string;
+    iban: string;
+    bic: string;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -208,22 +255,6 @@ export interface Client {
   defaultRate: number;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'clients';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -265,10 +296,36 @@ export interface Shift {
   breakDuration: number;
   notes?: string | null;
   status: 'scheduled' | 'completed' | 'cancelled';
-  /**
-   * Calculated total price for the shift
-   */
   totalPrice: number;
+  invoice?: (number | null) | Invoice;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices".
+ */
+export interface Invoice {
+  id: number;
+  invoiceNumber: string;
+  user: number | User;
+  client: number | Client;
+  shifts: (number | Shift)[];
+  totalAmount: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "logs".
+ */
+export interface Log {
+  id: number;
+  type: 'error' | 'warning' | 'info' | 'debug';
+  message: string;
+  stack?: string | null;
+  timestamp: string;
+  user?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -297,6 +354,10 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'admins';
+        value: number | Admin;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
@@ -315,16 +376,24 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'shifts';
         value: number | Shift;
+      } | null)
+    | ({
+        relationTo: 'invoices';
+        value: number | Invoice;
+      } | null)
+    | ({
+        relationTo: 'logs';
+        value: number | Log;
       } | null);
   globalSlug?: string | null;
   user:
     | {
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'admins';
+        value: number | Admin;
       }
     | {
-        relationTo: 'clients';
-        value: number | Client;
+        relationTo: 'users';
+        value: number | User;
       };
   updatedAt: string;
   createdAt: string;
@@ -337,12 +406,12 @@ export interface PayloadPreference {
   id: number;
   user:
     | {
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'admins';
+        value: number | Admin;
       }
     | {
-        relationTo: 'clients';
-        value: number | Client;
+        relationTo: 'users';
+        value: number | User;
       };
   key?: string | null;
   value?:
@@ -370,9 +439,51 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admins_select".
+ */
+export interface AdminsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  company?: T;
+  phone?: T;
+  website?: T;
+  address?:
+    | T
+    | {
+        streetAndNumber?: T;
+        city?: T;
+        postalCode?: T;
+      };
+  companyRegistrationNumber?: T;
+  bankDetails?:
+    | T
+    | {
+        name?: T;
+        iban?: T;
+        bic?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -433,20 +544,6 @@ export interface ClientsSelect<T extends boolean = true> {
   defaultRate?: T;
   updatedAt?: T;
   createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -475,6 +572,33 @@ export interface ShiftsSelect<T extends boolean = true> {
   notes?: T;
   status?: T;
   totalPrice?: T;
+  invoice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices_select".
+ */
+export interface InvoicesSelect<T extends boolean = true> {
+  invoiceNumber?: T;
+  user?: T;
+  client?: T;
+  shifts?: T;
+  totalAmount?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "logs_select".
+ */
+export interface LogsSelect<T extends boolean = true> {
+  type?: T;
+  message?: T;
+  stack?: T;
+  timestamp?: T;
+  user?: T;
   updatedAt?: T;
   createdAt?: T;
 }

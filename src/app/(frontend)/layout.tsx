@@ -1,9 +1,10 @@
-import React from 'react'
-import './styles.css'
+import { AuthProvider } from './_providers/auth/auth.provider'
+import './globals.css'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: 'Oasezorg CRM Frontend built with Next.js and Payload CMS',
+  title: 'Oasezorg CRM',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -12,7 +13,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <AuthProvider>
+          <TooltipProvider>
+            <main>{children}</main>
+          </TooltipProvider>
+        </AuthProvider>
       </body>
     </html>
   )

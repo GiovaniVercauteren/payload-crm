@@ -1,0 +1,220 @@
+import type {
+  Access,
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionBeforeChangeHook,
+  CollectionConfig,
+  Where,
+} from 'payload'
+import type { Shift, Invoice, User } from '@/payload-types'
+import { Admins } from './Admins'
+
+// Access control
+
+const canReadInvoice: Access<User> = ({ req: { user } }) => {
+  // Allow workers to read only their own invoices, admins can read all
+  if (!user) return false
+  if (user.collection === Admins.slug) return true
+  return {
+    user: {
+      equals: user.id,
+    },
+  }
+}
+
+const canCreateInvoice: Access<User> = ({ req: { user } }) => {
+  // Allow authenticated users to create invoices
+  return Boolean(user)
+}
+
+const canUpdateInvoice: Access<User> = ({ req: { user } }) => {
+  // Allow workers to update only their own invoices, admins can update all
+  if (!user) return false
+  if (user.collection === Admins.slug) return true
+  return {
+    user: {
+      equals: user.id,
+    },
+  }
+}
+
+const canDeleteInvoice: Access<User> = ({ req: { user } }) => {
+  // Allow workers to delete only their own invoices, admins can delete all
+  if (!user) return false
+  if (user.collection === Admins.slug) return true
+  return {
+    user: {
+      equals: user.id,
+    },
+  }
+}
+
+// Hooks
+
+const setUserOnCreate: CollectionBeforeChangeHook = async ({ data, req, operation }) => {
+  if (operation === 'create' && req.user) {
+    data.user = req.user.id
+  }
+  return data
+}
+
+const calculateTotalAmount: CollectionBeforeChangeHook = async ({ data, req }) => {
+  if (data.shifts && data.shifts.length > 0) {
+    const shiftIds = (data.shifts as (string | Shift)[]).map((s) =>
+      typeof s === 'string' ? s : s.id,
+    )
+
+    const shifts = await req.payload.find({
+      collection: 'shifts',
+      where: {
+        id: {
+          in: shiftIds,
+        },
+      },
+      depth: 0,
+      pagination: false,
+    })
+
+    data.totalAmount = shifts.docs.reduce((total, shift) => total + (shift.totalPrice || 0), 0)
+  } else {
+    data.totalAmount = 0
+  }
+
+  return data
+}
+
+const createOrUpdateShiftInvoiceRelation: CollectionAfterChangeHook = async ({
+  previousDoc,
+  doc,
+  operation,
+  req,
+}) => {
+  const getIds = (shifts: Shift[] | string[]) =>
+    (shifts || []).map((s) => (typeof s === 'string' ? s : s.id))
+
+  const currentShiftIds = getIds(doc.shifts)
+  const previousShiftIds = getIds(previousDoc?.shifts)
+
+  if (operation === 'create' || operation === 'update') {
+    const addedShiftIds = currentShiftIds.filter((id) => !previousShiftIds.includes(id))
+
+    for (const shiftId of addedShiftIds) {
+      await req.payload.update({
+        collection: 'shifts',
+        id: shiftId,
+        data: {
+          invoice: doc.id,
+        },
+      })
+    }
+
+    if (operation === 'update') {
+      const removedShiftIds = previousShiftIds.filter((id) => !currentShiftIds.includes(id))
+
+      for (const shiftId of removedShiftIds) {
+        await req.payload.update({
+          collection: 'shifts',
+          id: shiftId,
+          data: {
+            invoice: null,
+          },
+        })
+      }
+    }
+  }
+}
+
+const deleteInvoiceFromShifts: CollectionAfterDeleteHook = async ({ doc, req }) => {
+  const shiftIds = (doc.shifts || []).map((s: Shift | string) => (typeof s === 'string' ? s : s.id))
+
+  for (const shiftId of shiftIds) {
+    await req.payload.update({
+      collection: 'shifts',
+      id: shiftId,
+      data: {
+        invoice: null,
+      },
+    })
+  }
+}
+
+export const Invoices: CollectionConfig<'invoices'> = {
+  slug: 'invoices',
+  admin: {
+    useAsTitle: 'invoiceNumber',
+  },
+  access: {
+    read: canReadInvoice,
+    create: canCreateInvoice,
+    update: canUpdateInvoice,
+    delete: canDeleteInvoice,
+  },
+  hooks: {
+    beforeChange: [setUserOnCreate, calculateTotalAmount],
+    afterChange: [createOrUpdateShiftInvoiceRelation],
+    afterDelete: [deleteInvoiceFromShifts],
+  },
+  fields: [
+    {
+      name: 'invoiceNumber',
+      type: 'text',
+      required: true,
+      unique: true,
+    },
+    {
+      name: 'user',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      admin: {
+        hidden: true,
+      },
+    },
+    {
+      name: 'client',
+      type: 'relationship',
+      relationTo: 'clients',
+      required: true,
+    },
+    {
+      name: 'shifts',
+      type: 'relationship',
+      relationTo: 'shifts',
+      hasMany: true,
+      required: true,
+      filterOptions: ({ data, user }) => {
+        if (!data?.client || !user || !user.id) return false
+
+        const query: Where = {
+          and: [
+            {
+              client: {
+                equals: data.client,
+              },
+            },
+            {
+              invoice: {
+                equals: null,
+              },
+            },
+            {
+              user: {
+                equals: user.id,
+              },
+            },
+          ],
+        }
+
+        return query
+      },
+    },
+    {
+      name: 'totalAmount',
+      type: 'number',
+      required: true,
+      admin: {
+        readOnly: true,
+      },
+    },
+  ],
+}
