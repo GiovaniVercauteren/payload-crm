@@ -28,6 +28,12 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: '^(_|ignore)',
         },
       ],
+      'react/no-children-prop': [
+        true,
+        {
+          allowFunctions: true,
+        },
+      ],
     },
   },
   {

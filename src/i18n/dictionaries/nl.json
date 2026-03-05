@@ -1,0 +1,24 @@
+{
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "view": "Bekijken",
+    "create": "Aanmaken",
+    "search": "Zoeken",
+    "loading": "Laden...",
+    "noResults": "Geen resultaten gevonden.",
+    "error": "Er is een fout opgetreden. Probeer het opnieuw."
+  },
+  "auth": {
+    "login": "Inloggen",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "forgotPassword": "Wachtwoord vergeten?",
+    "submit": "Verzenden",
+    "invalidCredentials": "Ongeldig e-mailadres of wachtwoord.",
+    "noAccount": "Heb je nog geen account?",
+    "register": "Registreer hier!"
+  }
+}
