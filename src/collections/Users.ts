@@ -1,4 +1,38 @@
-import type { CollectionConfig } from 'payload'
+import { User } from '@/payload-types'
+import type { Access, CollectionConfig } from 'payload'
+
+const usersReadAccess: Access<User> = ({ req: { user } }) => {
+  // Allow users to read their own data, admins can read all
+  if (!user) return false
+  if (user.collection === 'admins') return true
+  return {
+    id: {
+      equals: user.id,
+    },
+  }
+}
+
+const usersUpdateAccess: Access<User> = ({ req: { user } }) => {
+  // Allow users to update their own data, admins can update all
+  if (!user) return false
+  if (user.collection === 'admins') return true
+  return {
+    id: {
+      equals: user.id,
+    },
+  }
+}
+
+const usersDeleteAccess: Access<User> = ({ req: { user } }) => {
+  // Allow users to delete their own data, admins can delete all
+  if (!user) return false
+  if (user.collection === 'admins') return true
+  return {
+    id: {
+      equals: user.id,
+    },
+  }
+}
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -6,6 +40,11 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: true,
+  access: {
+    read: usersReadAccess,
+    update: usersUpdateAccess,
+    delete: usersDeleteAccess,
+  },
   fields: [
     {
       saveToJWT: true,

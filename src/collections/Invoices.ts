@@ -11,7 +11,7 @@ import { Admins } from './Admins'
 
 // Access control
 
-const canReadInvoice: Access<User> = ({ req: { user } }) => {
+const invoiceReadAccess: Access<User> = ({ req: { user } }) => {
   // Allow workers to read only their own invoices, admins can read all
   if (!user) return false
   if (user.collection === Admins.slug) return true
@@ -27,7 +27,7 @@ const canCreateInvoice: Access<User> = ({ req: { user } }) => {
   return Boolean(user)
 }
 
-const canUpdateInvoice: Access<User> = ({ req: { user } }) => {
+const invoiceUpdateAccess: Access<User> = ({ req: { user } }) => {
   // Allow workers to update only their own invoices, admins can update all
   if (!user) return false
   if (user.collection === Admins.slug) return true
@@ -38,7 +38,7 @@ const canUpdateInvoice: Access<User> = ({ req: { user } }) => {
   }
 }
 
-const canDeleteInvoice: Access<User> = ({ req: { user } }) => {
+const invoiceDeleteAccess: Access<User> = ({ req: { user } }) => {
   // Allow workers to delete only their own invoices, admins can delete all
   if (!user) return false
   if (user.collection === Admins.slug) return true
@@ -144,10 +144,10 @@ export const Invoices: CollectionConfig<'invoices'> = {
     useAsTitle: 'invoiceNumber',
   },
   access: {
-    read: canReadInvoice,
+    read: invoiceReadAccess,
     create: canCreateInvoice,
-    update: canUpdateInvoice,
-    delete: canDeleteInvoice,
+    update: invoiceUpdateAccess,
+    delete: invoiceDeleteAccess,
   },
   hooks: {
     beforeChange: [setUserOnCreate, calculateTotalAmount],

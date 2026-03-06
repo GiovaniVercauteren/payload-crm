@@ -1,8 +1,14 @@
+import OasezorgLogo from '@/app/(frontend)/_components/oasezorg-logo'
+import { useTranslations } from 'next-intl'
+
 export default function RegisterPage() {
+  const t = useTranslations('auth')
+
   return (
-    <main>
-      <h1>Register</h1>
-      <p>This is the registration page. You can customize it as needed.</p>
-    </main>
+    <section className="w-sm flex flex-col items-center justify-center">
+      <OasezorgLogo className="h-24 mb-8" />
+      <p>{t('registrationClosed')}</p>
+      <p>{t('contactAdminForAccess')}</p>
+    </section>
   )
 }

@@ -19,6 +19,11 @@
     "submit": "Submit",
     "invalidCredentials": "Invalid email or password.",
     "noAccount": "Don't have an account?",
-    "register": "Register here!"
+    "register": "Register here!",
+    "registrationClosed": "Manual registrations are closed",
+    "contactAdminForAccess": "Please contact the administrator for access"
+  },
+  "register": {
+    "closed": "Manual registrations are closed"
   }
 }

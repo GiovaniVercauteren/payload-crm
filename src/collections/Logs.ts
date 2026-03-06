@@ -2,21 +2,21 @@ import { User } from '@/payload-types'
 import type { Access, CollectionConfig } from 'payload'
 import { Admins } from './Admins'
 
-const canReadLogs: Access<User> = ({ req: { user } }) => {
+const logsReadAccess: Access<User> = ({ req: { user } }) => {
   if (!user) {
     return false
   }
   return user.collection === Admins.slug
 }
 
-const canDeleteLogs: Access<User> = ({ req: { user } }) => {
+const logsDeleteAccess: Access<User> = ({ req: { user } }) => {
   if (!user) {
     return false
   }
   return user.collection === Admins.slug
 }
 
-const canUpdateLogs: Access<User> = () => {
+const logsUpdateAccess: Access<User> = () => {
   // nobody should be able to update log records, even admins, to preserve the integrity of the data
   return false
 }
@@ -78,8 +78,8 @@ export const Logs: CollectionConfig = {
     },
   ],
   access: {
-    read: canReadLogs,
-    update: canUpdateLogs,
-    delete: canDeleteLogs,
+    read: logsReadAccess,
+    update: logsUpdateAccess,
+    delete: logsDeleteAccess,
   },
 }
