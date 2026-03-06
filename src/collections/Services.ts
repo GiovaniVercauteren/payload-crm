@@ -5,6 +5,9 @@ const servicesReadAccess: Access<User> = ({ req: { user } }) => {
   if (!user) {
     return false
   }
+  if (user.collection === 'admins') {
+    return true
+  }
   return {
     user: {
       equals: user.id,
@@ -16,6 +19,9 @@ const servicesUpdateAccess: Access<User> = ({ req: { user } }) => {
   if (!user) {
     return false
   }
+  if (user.collection === 'admins') {
+    return true
+  }
   return {
     user: {
       equals: user.id,
@@ -26,6 +32,9 @@ const servicesUpdateAccess: Access<User> = ({ req: { user } }) => {
 const servicesDeleteAccess: Access<User> = ({ req: { user } }) => {
   if (!user) {
     return false
+  }
+  if (user.collection === 'admins') {
+    return true
   }
   return {
     user: {

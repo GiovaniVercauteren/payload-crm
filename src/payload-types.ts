@@ -266,6 +266,7 @@ export interface Service {
   rateType: 'hourly' | 'fixed';
   rate: number;
   description?: string | null;
+  user: number | User;
   /**
    * Mark service as deprecated
    */
@@ -554,6 +555,7 @@ export interface ServicesSelect<T extends boolean = true> {
   rateType?: T;
   rate?: T;
   description?: T;
+  user?: T;
   deprecated?: T;
   updatedAt?: T;
   createdAt?: T;

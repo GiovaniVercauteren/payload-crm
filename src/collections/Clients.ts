@@ -1,9 +1,57 @@
-import type { CollectionConfig } from 'payload'
+import { User } from '@/payload-types'
+import type { Access, CollectionConfig } from 'payload'
+
+const clientsReadAccess: Access<User> = ({ req: { user } }) => {
+  if (!user) {
+    return false
+  }
+  if (user.collection === 'admins') {
+    return true
+  }
+  return {
+    user: {
+      equals: user.id,
+    },
+  }
+}
+
+const clientsUpdateAccess: Access<User> = ({ req: { user } }) => {
+  if (!user) {
+    return false
+  }
+  if (user.collection === 'admins') {
+    return true
+  }
+  return {
+    user: {
+      equals: user.id,
+    },
+  }
+}
+
+const clientsDeleteAccess: Access<User> = ({ req: { user } }) => {
+  if (!user) {
+    return false
+  }
+  if (user.collection === 'admins') {
+    return true
+  }
+  return {
+    user: {
+      equals: user.id,
+    },
+  }
+}
 
 export const Clients: CollectionConfig = {
   slug: 'clients',
   admin: {
     useAsTitle: 'name',
+  },
+  access: {
+    read: clientsReadAccess,
+    update: clientsUpdateAccess,
+    delete: clientsDeleteAccess,
   },
   fields: [
     {
@@ -74,6 +122,21 @@ export const Clients: CollectionConfig = {
     {
       name: 'defaultRate',
       type: 'number',
+    },
+    {
+      name: 'user',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      hooks: {
+        beforeChange: [
+          ({ value, operation, req: { user } }) => {
+            if (operation === 'create' && !value && user) {
+              value = user.id
+            }
+          },
+        ],
+      },
     },
   ],
 }
