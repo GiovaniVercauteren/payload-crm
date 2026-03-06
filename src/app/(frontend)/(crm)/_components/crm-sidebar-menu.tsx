@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { Users, Briefcase, FileText, LayoutDashboard, Settings } from 'lucide-react'
+import { Users, Briefcase, FileText, LayoutDashboard, Settings, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import {
   SidebarMenu,
@@ -32,6 +32,11 @@ export default function CrmSidebarMenu() {
       title: t('services'),
       url: '/services',
       icon: Briefcase,
+    },
+    {
+      title: t('shifts'),
+      url: '/shifts',
+      icon: Calendar,
     },
     {
       title: t('invoices'),

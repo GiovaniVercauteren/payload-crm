@@ -10,6 +10,7 @@
     "dashboard": "Dashboard",
     "clients": "Clients",
     "services": "Services",
+    "shifts": "Shifts",
     "invoices": "Invoices",
     "account": "Account",
     "logout": "Logout",
@@ -101,6 +102,62 @@
       "createService": "Create Service",
       "selectRateType": "Select rate type",
       "serviceLegend": "Service Info"
+    }
+  },
+  "invoices": {
+    "invoiceNumber": "Invoice Number",
+    "client": "Client",
+    "shifts": "Shifts",
+    "totalAmount": "Total Amount",
+    "date": "Date",
+    "editInvoice": "Edit Invoice",
+    "invoiceDetails": "Invoice Details",
+    "messages": {
+      "createSuccess": "Invoice created successfully.",
+      "createError": "Failed to create invoice.",
+      "updateSuccess": "Invoice updated successfully.",
+      "updateError": "Failed to update invoice.",
+      "deleteSuccess": "Invoice deleted successfully.",
+      "deleteError": "Failed to delete invoice."
+    },
+    "create": {
+      "createInvoice": "Create Invoice",
+      "selectClient": "Select client",
+      "invoiceLegend": "Invoice Info",
+      "selectShifts": "Select shifts"
+    }
+  },
+  "shifts": {
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "breakDuration": "Break (min)",
+    "notes": "Notes",
+    "status": "Status",
+    "totalPrice": "Total Price",
+    "client": "Client",
+    "service": "Service",
+    "customRate": "Custom Rate",
+    "customRateType": "Custom Rate Type",
+    "editShift": "Edit Shift",
+    "shiftDetails": "Shift Details",
+    "statuses": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "messages": {
+      "createSuccess": "Shift created successfully.",
+      "createError": "Failed to create shift.",
+      "updateSuccess": "Shift updated successfully.",
+      "updateError": "Failed to update shift.",
+      "deleteSuccess": "Shift deleted successfully.",
+      "deleteError": "Failed to delete shift."
+    },
+    "create": {
+      "createShift": "Create Shift",
+      "selectService": "Select service",
+      "shiftLegend": "Shift Info",
+      "selectRateType": "Select custom rate type"
     }
   }
 }

@@ -68,6 +68,30 @@ export const Shifts: CollectionConfig = {
       required: true,
     },
     {
+      name: 'customRate',
+      type: 'number',
+      admin: {
+        description: 'Override the default service rate for this specific shift',
+      },
+    },
+    {
+      name: 'customRateType',
+      type: 'select',
+      options: [
+        {
+          label: 'Hourly',
+          value: 'hourly',
+        },
+        {
+          label: 'Fixed',
+          value: 'fixed',
+        },
+      ],
+      admin: {
+        description: 'Required if custom rate is set',
+      },
+    },
+    {
       name: 'startDate',
       type: 'date',
       required: true,
@@ -75,7 +99,7 @@ export const Shifts: CollectionConfig = {
         description: 'Start date and time of the shift',
         date: {
           displayFormat: 'DD/MM/YYYY HH:mm',
-          pickerAppearance: 'dayAndTime', // Show both date and time in the picker
+          pickerAppearance: 'dayAndTime',
         },
       },
     },
@@ -87,7 +111,7 @@ export const Shifts: CollectionConfig = {
         description: 'End date and time of the shift',
         date: {
           displayFormat: 'DD/MM/YYYY HH:mm',
-          pickerAppearance: 'dayAndTime', // Show both date and time in the picker
+          pickerAppearance: 'dayAndTime',
         },
       },
     },
@@ -150,18 +174,31 @@ export const Shifts: CollectionConfig = {
         const start = new Date(data.startDate)
         const end = new Date(data.endDate)
         const durationInHours =
-          (end.getTime() - start.getTime()) / (1000 * 60 * 60) - data.breakDuration / 60
+          (end.getTime() - start.getTime()) / (1000 * 60 * 60) - (data.breakDuration || 0) / 60
 
-        // Fetch service rate
-        const service = await req.payload.findByID({
-          collection: 'services',
-          id: data.service,
-        })
+        let rate = 0
+        let rateType = 'hourly'
 
-        if (service && service.rateType === 'hourly') {
-          data.totalPrice = durationInHours * service.rate
-        } else if (service && service.rateType === 'fixed') {
-          data.totalPrice = service.rate
+        if (data.customRate !== undefined && data.customRate !== null) {
+          rate = data.customRate
+          rateType = data.customRateType || 'hourly'
+        } else {
+          // Fetch service rate
+          const service = await req.payload.findByID({
+            collection: 'services',
+            id: data.service,
+          })
+
+          if (service) {
+            rate = service.rate
+            rateType = service.rateType
+          }
+        }
+
+        if (rateType === 'hourly') {
+          data.totalPrice = durationInHours * rate
+        } else if (rateType === 'fixed') {
+          data.totalPrice = rate
         } else {
           data.totalPrice = 0
         }

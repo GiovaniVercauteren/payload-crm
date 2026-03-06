@@ -10,6 +10,7 @@
     "dashboard": "Dashboard",
     "clients": "Klanten",
     "services": "Services",
+    "shifts": "Diensten",
     "invoices": "Facturen",
     "account": "Account",
     "logout": "Uitloggen",
@@ -101,6 +102,62 @@
       "createService": "Service aanmaken",
       "selectRateType": "Selecteer tarieftype",
       "serviceLegend": "Service-informatie"
+    }
+  },
+  "invoices": {
+    "invoiceNumber": "Factuurnummer",
+    "client": "Klant",
+    "shifts": "Diensten",
+    "totalAmount": "Totaalbedrag",
+    "date": "Datum",
+    "editInvoice": "Factuur bewerken",
+    "invoiceDetails": "Factuurdetails",
+    "messages": {
+      "createSuccess": "Factuur succesvol aangemaakt.",
+      "createError": "Factuur aanmaken mislukt.",
+      "updateSuccess": "Factuur succesvol bijgewerkt.",
+      "updateError": "Factuur bijwerken mislukt.",
+      "deleteSuccess": "Factuur succesvol verwijderd.",
+      "deleteError": "Factuur verwijderen mislukt."
+    },
+    "create": {
+      "createInvoice": "Factuur aanmaken",
+      "selectClient": "Selecteer klant",
+      "invoiceLegend": "Factuurinformatie",
+      "selectShifts": "Selecteer diensten"
+    }
+  },
+  "shifts": {
+    "startDate": "Startdatum",
+    "endDate": "Einddatum",
+    "breakDuration": "Pauze (min)",
+    "notes": "Notities",
+    "status": "Status",
+    "totalPrice": "Totaalprijs",
+    "client": "Klant",
+    "service": "Service",
+    "customRate": "Aangepast tarief",
+    "customRateType": "Aangepast tarieftype",
+    "editShift": "Dienst bewerken",
+    "shiftDetails": "Dienstdetails",
+    "statuses": {
+      "scheduled": "Gepland",
+      "completed": "Voltooid",
+      "cancelled": "Geannuleerd"
+    },
+    "messages": {
+      "createSuccess": "Dienst succesvol aangemaakt.",
+      "createError": "Dienst aanmaken mislukt.",
+      "updateSuccess": "Dienst succesvol bijgewerkt.",
+      "updateError": "Dienst bijwerken mislukt.",
+      "deleteSuccess": "Dienst succesvol verwijderd.",
+      "deleteError": "Dienst verwijderen mislukt."
+    },
+    "create": {
+      "createShift": "Dienst aanmaken",
+      "selectService": "Selecteer service",
+      "shiftLegend": "Dienstinformatie",
+      "selectRateType": "Selecteer aangepast tarieftype"
     }
   }
 }

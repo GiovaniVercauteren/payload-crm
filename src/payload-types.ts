@@ -285,6 +285,14 @@ export interface Shift {
   client: number | Client;
   service: number | Service;
   /**
+   * Override the default service rate for this specific shift
+   */
+  customRate?: number | null;
+  /**
+   * Required if custom rate is set
+   */
+  customRateType?: ('hourly' | 'fixed') | null;
+  /**
    * Start date and time of the shift
    */
   startDate: string;
@@ -570,6 +578,8 @@ export interface ShiftsSelect<T extends boolean = true> {
   worker?: T;
   client?: T;
   service?: T;
+  customRate?: T;
+  customRateType?: T;
   startDate?: T;
   endDate?: T;
   breakDuration?: T;
