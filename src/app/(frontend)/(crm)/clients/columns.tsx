@@ -26,6 +26,7 @@ import {
 import { deleteClientAction } from './actions'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useAuth } from '../../_providers/auth/auth.provider'
 
 interface ActionCellProps {
   client: Client
@@ -33,6 +34,7 @@ interface ActionCellProps {
 }
 
 const ActionCell = ({ client, onDelete }: ActionCellProps) => {
+  const auth = useAuth()
   const t = useTranslations('common')
   const tMessages = useTranslations('clients.messages')
   const [isDeleting, setIsDeleting] = useState(false)
@@ -40,7 +42,7 @@ const ActionCell = ({ client, onDelete }: ActionCellProps) => {
   const handleDelete = async () => {
     setIsDeleting(true)
     try {
-      await deleteClientAction(client.id.toString())
+      await deleteClientAction(client.id.toString(), auth.user!)
       toast.success(tMessages('deleteSuccess'))
       onDelete()
     } catch (error) {
@@ -89,11 +91,7 @@ const ActionCell = ({ client, onDelete }: ActionCellProps) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('deleteConfirmation.cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              variant="destructive"
-              disabled={isDeleting}
-            >
+            <AlertDialogAction onClick={handleDelete} variant="destructive" disabled={isDeleting}>
               {t('deleteConfirmation.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>

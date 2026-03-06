@@ -9,15 +9,17 @@ import { getColumns } from './columns'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { useAuth } from '../../_providers/auth/auth.provider'
 
 export default function ClientsPage() {
+  const auth = useAuth()
   const [clients, setClients] = useState<PaginatedDocs<Client> | null>(null)
   const t = useTranslations('clients.create')
 
   const fetchClients = useCallback(async () => {
     const clients = await getClientsAction()
     setClients(clients)
-  }, [])
+  }, [auth.user])
 
   useEffect(() => {
     fetchClients()

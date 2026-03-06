@@ -15,6 +15,16 @@ const clientsReadAccess: Access<User> = ({ req: { user } }) => {
   }
 }
 
+const clientsCreateAccess: Access<User> = ({ req: { user } }) => {
+  if (!user) {
+    return false
+  }
+  if (user.collection === 'admins') {
+    return true
+  }
+  return true // Allow all authenticated users to create clients
+}
+
 const clientsUpdateAccess: Access<User> = ({ req: { user } }) => {
   if (!user) {
     return false
@@ -50,6 +60,7 @@ export const Clients: CollectionConfig = {
   },
   access: {
     read: clientsReadAccess,
+    create: clientsCreateAccess,
     update: clientsUpdateAccess,
     delete: clientsDeleteAccess,
   },
@@ -131,9 +142,11 @@ export const Clients: CollectionConfig = {
       hooks: {
         beforeChange: [
           ({ value, operation, req: { user } }) => {
+            console.log('Before change hook triggered for user field:', { value, operation, user })
             if (operation === 'create' && !value && user) {
               value = user.id
             }
+            return value
           },
         ],
       },
