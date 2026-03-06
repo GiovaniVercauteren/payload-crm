@@ -4,6 +4,21 @@ import config from '../../src/payload.config.js'
 export const testUser = {
   email: 'dev@payloadcms.com',
   password: 'test',
+  firstName: 'Test',
+  lastName: 'User',
+  company: 'Test Company',
+  phone: '0123456789',
+  companyRegistrationNumber: 'BE0123456789',
+  address: {
+    streetAndNumber: 'Test Street 1',
+    city: 'Test City',
+    postalCode: '1000',
+  },
+  bankDetails: {
+    name: 'Test Bank',
+    iban: 'BE00000000000000',
+    bic: 'TESTBEBB',
+  },
 }
 
 /**

@@ -44,6 +44,7 @@ export default function EditClientForm({ client }: EditClientFormProps) {
     },
     notes: client.notes || '',
     defaultRate: client.defaultRate || undefined,
+    user: typeof client.user === 'object' ? client.user.id : client.user,
   }
 
   return (

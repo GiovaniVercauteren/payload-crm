@@ -7,9 +7,17 @@
     "view": "View",
     "create": "Create",
     "search": "Search",
+    "dashboard": "Dashboard",
+    "clients": "Clients",
+    "services": "Services",
+    "invoices": "Invoices",
+    "account": "Account",
+    "logout": "Logout",
     "loading": "Loading...",
     "noResults": "No results found.",
     "error": "An error occurred. Please try again.",
+    "yes": "Yes",
+    "no": "No",
     "deleteConfirmation": {
       "title": "Are you absolutely sure?",
       "description": "This action cannot be undone. This will permanently delete the item.",
@@ -67,6 +75,32 @@
       "addressLegend": "Address",
       "contactInfoLegend": "Contact Info",
       "additionalInfoLegend": "Additional Info"
+    }
+  },
+  "services": {
+    "name": "Name",
+    "rateType": "Rate Type",
+    "rate": "Rate",
+    "description": "Description",
+    "deprecated": "Deprecated",
+    "rateTypes": {
+      "hourly": "Hourly",
+      "fixed": "Fixed"
+    },
+    "editService": "Edit Service",
+    "serviceDetails": "Service Details",
+    "messages": {
+      "createSuccess": "Service created successfully.",
+      "createError": "Failed to create service.",
+      "updateSuccess": "Service updated successfully.",
+      "updateError": "Failed to update service.",
+      "deleteSuccess": "Service deleted successfully.",
+      "deleteError": "Failed to delete service."
+    },
+    "create": {
+      "createService": "Create Service",
+      "selectRateType": "Select rate type",
+      "serviceLegend": "Service Info"
     }
   }
 }

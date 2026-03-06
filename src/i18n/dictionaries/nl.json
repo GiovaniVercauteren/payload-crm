@@ -7,9 +7,17 @@
     "view": "Bekijken",
     "create": "Aanmaken",
     "search": "Zoeken",
+    "dashboard": "Dashboard",
+    "clients": "Klanten",
+    "services": "Services",
+    "invoices": "Facturen",
+    "account": "Account",
+    "logout": "Uitloggen",
     "loading": "Laden...",
     "noResults": "Geen resultaten gevonden.",
     "error": "Er is een fout opgetreden. Probeer het opnieuw.",
+    "yes": "Ja",
+    "no": "Nee",
     "deleteConfirmation": {
       "title": "Weet je het zeker?",
       "description": "Deze actie kan niet ongedaan worden gemaakt. Dit zal het item permanent verwijderen.",
@@ -67,6 +75,32 @@
       "addressLegend": "Adres",
       "contactInfoLegend": "Contactgegevens",
       "additionalInfoLegend": "Extra informatie"
+    }
+  },
+  "services": {
+    "name": "Naam",
+    "rateType": "Tarieftype",
+    "rate": "Tarief",
+    "description": "Beschrijving",
+    "deprecated": "Gearchiveerd",
+    "rateTypes": {
+      "hourly": "Uurtarief",
+      "fixed": "Vast tarief"
+    },
+    "editService": "Service bewerken",
+    "serviceDetails": "Servicedetails",
+    "messages": {
+      "createSuccess": "Service succesvol aangemaakt.",
+      "createError": "Service aanmaken mislukt.",
+      "updateSuccess": "Service succesvol bijgewerkt.",
+      "updateError": "Service bijwerken mislukt.",
+      "deleteSuccess": "Service succesvol verwijderd.",
+      "deleteError": "Service verwijderen mislukt."
+    },
+    "create": {
+      "createService": "Service aanmaken",
+      "selectRateType": "Selecteer tarieftype",
+      "serviceLegend": "Service-informatie"
     }
   }
 }

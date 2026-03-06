@@ -33,7 +33,7 @@ const formSchema = z.object({
   type: z.enum(clientTypes),
   contactInfo: z
     .object({
-      email: z.email('Invalid email address').optional().or(z.literal('')),
+      email: z.string().email('Invalid email address').optional().or(z.literal('')),
       phone: z.string().optional(),
     })
     .optional(),
@@ -45,6 +45,7 @@ const formSchema = z.object({
   }),
   notes: z.string().optional(),
   defaultRate: z.number().optional(),
+  user: z.union([z.number(), z.any()]),
 })
 
 interface ClientFormProps {
@@ -77,6 +78,7 @@ export default function ClientForm({
       },
       notes: '',
       defaultRate: undefined,
+      user: 0,
     }) as CreateData<Client>,
     validators: {
       onSubmit: formSchema,

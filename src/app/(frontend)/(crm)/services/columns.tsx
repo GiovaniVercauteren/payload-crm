@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Client } from '@/payload-types'
+import { Service } from '@/payload-types'
 import { useTranslations } from 'next-intl'
 import {
   DropdownMenu,
@@ -23,31 +23,29 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { deleteClientAction } from './actions'
+import { deleteServiceAction } from './actions'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { useAuth } from '../../_providers/auth/auth.provider'
 
 interface ActionCellProps {
-  client: Client
+  service: Service
   onDelete: () => void
 }
 
-const ActionCell = ({ client, onDelete }: ActionCellProps) => {
-  const auth = useAuth()
+const ActionCell = ({ service, onDelete }: ActionCellProps) => {
   const t = useTranslations('common')
-  const tMessages = useTranslations('clients.messages')
+  const tMessages = useTranslations('services.messages')
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
     setIsDeleting(true)
     try {
-      await deleteClientAction(client.id.toString())
+      await deleteServiceAction(service.id.toString())
       toast.success(tMessages('deleteSuccess'))
       onDelete()
     } catch (error) {
       toast.error(tMessages('deleteError'))
-      console.error('Failed to delete client:', error)
+      console.error('Failed to delete service:', error)
     } finally {
       setIsDeleting(false)
     }
@@ -65,13 +63,13 @@ const ActionCell = ({ client, onDelete }: ActionCellProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <Link href={`/clients/${client.id}`}>
+              <Link href={`/services/${service.id}`}>
                 <Eye className="mr-2 h-4 w-4" />
                 {t('view')}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href={`/clients/${client.id}/edit`}>
+              <Link href={`/services/${service.id}/edit`}>
                 <Pencil className="mr-2 h-4 w-4" />
                 {t('edit')}
               </Link>
@@ -91,7 +89,11 @@ const ActionCell = ({ client, onDelete }: ActionCellProps) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('deleteConfirmation.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} variant="destructive" disabled={isDeleting}>
+            <AlertDialogAction
+              onClick={handleDelete}
+              variant="destructive"
+              disabled={isDeleting}
+            >
               {t('deleteConfirmation.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -101,23 +103,30 @@ const ActionCell = ({ client, onDelete }: ActionCellProps) => {
   )
 }
 
-export const getColumns = (onDelete: () => void): ColumnDef<Client>[] => [
+export const getColumns = (onDelete: () => void): ColumnDef<Service>[] => [
   {
     accessorKey: 'name',
     header: 'Name',
   },
   {
-    accessorKey: 'type',
-    header: 'Type',
+    accessorKey: 'rateType',
+    header: 'Rate Type',
     cell: ({ row }) => {
-      const t = useTranslations('clients.clientTypes')
-      const type = row.original.type
+      const t = useTranslations('services.rateTypes')
+      const type = row.original.rateType
 
       return <>{t(type)}</>
     },
   },
   {
+    accessorKey: 'rate',
+    header: 'Rate',
+    cell: ({ row }) => {
+      return <>€{row.original.rate.toFixed(2)}</>
+    },
+  },
+  {
     id: 'actions',
-    cell: ({ row }) => <ActionCell client={row.original} onDelete={onDelete} />,
+    cell: ({ row }) => <ActionCell service={row.original} onDelete={onDelete} />,
   },
 ]
