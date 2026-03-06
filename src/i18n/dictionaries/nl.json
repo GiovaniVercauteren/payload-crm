@@ -9,7 +9,13 @@
     "search": "Zoeken",
     "loading": "Laden...",
     "noResults": "Geen resultaten gevonden.",
-    "error": "Er is een fout opgetreden. Probeer het opnieuw."
+    "error": "Er is een fout opgetreden. Probeer het opnieuw.",
+    "deleteConfirmation": {
+      "title": "Weet je het zeker?",
+      "description": "Deze actie kan niet ongedaan worden gemaakt. Dit zal het item permanent verwijderen.",
+      "confirm": "Verwijderen",
+      "cancel": "Annuleren"
+    }
   },
   "auth": {
     "login": "Inloggen",
@@ -19,6 +25,48 @@
     "submit": "Verzenden",
     "invalidCredentials": "Ongeldig e-mailadres of wachtwoord.",
     "noAccount": "Heb je nog geen account?",
-    "register": "Registreer hier!"
+    "register": "Registreer hier!",
+    "registrationClosed": "Handmatige registraties zijn gesloten",
+    "contactAdminForAccess": "Neem contact op met de beheerder voor toegang"
+  },
+  "register": {
+    "closed": "Handmatige registraties zijn gesloten"
+  },
+  "clients": {
+    "name": "Naam",
+    "type": "Type",
+    "address": {
+      "street": "Straat en huisnummer",
+      "city": "Stad",
+      "postalCode": "Postcode",
+      "country": "Land"
+    },
+    "contactInfo": {
+      "email": "E-mail",
+      "phone": "Telefoon"
+    },
+    "notes": "Notities",
+    "defaultRate": "Standaardtarief",
+    "clientTypes": {
+      "individual": "Individueel",
+      "residential_care_center": "Woonzorgcentrum"
+    },
+    "editClient": "Klant bewerken",
+    "clientDetails": "Klantdetails",
+    "messages": {
+      "createSuccess": "Klant succesvol aangemaakt.",
+      "createError": "Klant aanmaken mislukt.",
+      "updateSuccess": "Klant succesvol bijgewerkt.",
+      "updateError": "Klant bijwerken mislukt.",
+      "deleteSuccess": "Klant succesvol verwijderd.",
+      "deleteError": "Klant verwijderen mislukt."
+    },
+    "create": {
+      "createClient": "Klant aanmaken",
+      "selectClientType": "Selecteer klanttype",
+      "addressLegend": "Adres",
+      "contactInfoLegend": "Contactgegevens",
+      "additionalInfoLegend": "Extra informatie"
+    }
   }
 }

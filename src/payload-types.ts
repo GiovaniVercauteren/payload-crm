@@ -245,14 +245,14 @@ export interface Client {
     email?: string | null;
     phone?: string | null;
   };
-  address?: {
-    street?: string | null;
-    city?: string | null;
-    postalCode?: string | null;
-    country?: string | null;
+  address: {
+    street: string;
+    city: string;
+    postalCode: string;
+    country: string;
   };
   notes?: string | null;
-  defaultRate: number;
+  defaultRate?: number | null;
   updatedAt: string;
   createdAt: string;
 }

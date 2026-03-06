@@ -1,14 +1,14 @@
-import { getClientAction } from '../actions'
-import ClientDetails from './client-details'
+import { getClientAction } from '../../actions'
+import EditClientForm from './edit-client-form'
 import { notFound } from 'next/navigation'
 
-interface ClientPageProps {
+interface EditClientPageProps {
   params: Promise<{
     clientId: string
   }>
 }
 
-export default async function ClientPage({ params }: ClientPageProps) {
+export default async function EditClientPage({ params }: EditClientPageProps) {
   const { clientId } = await params
   const client = await getClientAction(clientId)
 
@@ -18,7 +18,7 @@ export default async function ClientPage({ params }: ClientPageProps) {
 
   return (
     <div>
-      <ClientDetails client={client} />
+      <EditClientForm client={client} />
     </div>
   )
 }

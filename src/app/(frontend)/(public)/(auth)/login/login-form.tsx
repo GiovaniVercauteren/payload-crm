@@ -60,7 +60,7 @@ export default function LoginForm() {
               </Field>
             )
           }}
-        ></form.Field>
+        />
         <form.Field
           name="password"
           children={(field) => {
@@ -80,7 +80,7 @@ export default function LoginForm() {
               </Field>
             )
           }}
-        ></form.Field>
+        />
       </FieldGroup>
       <Button type="submit" className="w-full">
         {t('login')}

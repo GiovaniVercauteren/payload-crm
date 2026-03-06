@@ -43,22 +43,27 @@ export const Clients: CollectionConfig = {
     {
       name: 'address',
       type: 'group',
+      required: true,
       fields: [
         {
           name: 'street',
           type: 'text',
+          required: true,
         },
         {
           name: 'city',
           type: 'text',
+          required: true,
         },
         {
           name: 'postalCode',
           type: 'text',
+          required: true,
         },
         {
           name: 'country',
           type: 'text',
+          required: true,
         },
       ],
     },
@@ -69,7 +74,6 @@ export const Clients: CollectionConfig = {
     {
       name: 'defaultRate',
       type: 'number',
-      required: true,
     },
   ],
 }

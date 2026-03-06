@@ -9,7 +9,13 @@
     "search": "Search",
     "loading": "Loading...",
     "noResults": "No results found.",
-    "error": "An error occurred. Please try again."
+    "error": "An error occurred. Please try again.",
+    "deleteConfirmation": {
+      "title": "Are you absolutely sure?",
+      "description": "This action cannot be undone. This will permanently delete the item.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
   },
   "auth": {
     "login": "Login",
@@ -25,5 +31,42 @@
   },
   "register": {
     "closed": "Manual registrations are closed"
+  },
+  "clients": {
+    "name": "Name",
+    "type": "Type",
+    "address": {
+      "street": "Street and number",
+      "city": "City",
+      "postalCode": "Postal code",
+      "country": "Country"
+    },
+    "contactInfo": {
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "notes": "Notes",
+    "defaultRate": "Default rate",
+    "clientTypes": {
+      "individual": "Individual",
+      "residential_care_center": "Residential Care Center"
+    },
+    "editClient": "Edit Client",
+    "clientDetails": "Client Details",
+    "messages": {
+      "createSuccess": "Client created successfully.",
+      "createError": "Failed to create client.",
+      "updateSuccess": "Client updated successfully.",
+      "updateError": "Failed to update client.",
+      "deleteSuccess": "Client deleted successfully.",
+      "deleteError": "Failed to delete client."
+    },
+    "create": {
+      "createClient": "Create Client",
+      "selectClientType": "Select client type",
+      "addressLegend": "Address",
+      "contactInfoLegend": "Contact Info",
+      "additionalInfoLegend": "Additional Info"
+    }
   }
 }
