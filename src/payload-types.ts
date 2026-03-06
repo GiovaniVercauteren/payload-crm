@@ -253,6 +253,7 @@ export interface Client {
   };
   notes?: string | null;
   defaultRate?: number | null;
+  user: number | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -543,6 +544,7 @@ export interface ClientsSelect<T extends boolean = true> {
       };
   notes?: T;
   defaultRate?: T;
+  user?: T;
   updatedAt?: T;
   createdAt?: T;
 }
