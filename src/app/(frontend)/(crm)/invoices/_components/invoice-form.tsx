@@ -52,10 +52,10 @@ export default function InvoiceForm({
   const router = useRouter()
   const [clients, setClients] = useState<Client[]>([])
   const [availableShifts, setAvailableShifts] = useState<Shift[]>([])
-  
+
   const form = useForm({
     defaultValues: (initialValues || {
-      invoiceNumber: `INV-${new Date().getTime()}`,
+      invoiceNumber: `OZ-${new Date().getTime()}`,
       client: 0,
       shifts: [],
       user: 0,
@@ -149,8 +149,12 @@ export default function InvoiceForm({
 
               <FormObj.Subscribe selector={(state: any) => state.values.client}>
                 {(selectedClient: any) => (
-                  <ShiftSelector 
-                    clientId={typeof selectedClient === 'number' ? selectedClient : (selectedClient as any)?.id} 
+                  <ShiftSelector
+                    clientId={
+                      typeof selectedClient === 'number'
+                        ? selectedClient
+                        : (selectedClient as any)?.id
+                    }
                     form={FormObj}
                     availableShifts={availableShifts}
                     setAvailableShifts={setAvailableShifts}
@@ -171,15 +175,15 @@ export default function InvoiceForm({
   )
 }
 
-function ShiftSelector({ 
-  clientId, 
+function ShiftSelector({
+  clientId,
   form,
   availableShifts,
-  setAvailableShifts
-}: { 
-  clientId: number, 
-  form: any,
-  availableShifts: Shift[],
+  setAvailableShifts,
+}: {
+  clientId: number
+  form: any
+  availableShifts: Shift[]
   setAvailableShifts: (shifts: Shift[]) => void
 }) {
   const tInvoicesCreate = useTranslations('invoices.create')
@@ -225,8 +229,7 @@ function ShiftSelector({
                     htmlFor={`shift-${shift.id}`}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    {new Date(shift.startDate).toLocaleString()} - €
-                    {shift.totalPrice.toFixed(2)}
+                    {new Date(shift.startDate).toLocaleString()} - €{shift.totalPrice.toFixed(2)}
                   </label>
                 </div>
               ))}
