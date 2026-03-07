@@ -33,3 +33,27 @@ export async function initializeAuthAction() {
     return { user: null, permissions: null }
   }
 }
+
+export async function updateAccountAction(data: any) {
+  const headers = await getHeaders()
+  const payload = await getPayload({ config })
+  const { user } = await payload.auth({ headers })
+
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  try {
+    const updatedUser = await payload.update({
+      collection: 'users',
+      id: user.id,
+      data,
+      overrideAccess: false,
+      user,
+    })
+    return updatedUser
+  } catch (error) {
+    console.error('Failed to update account:', error)
+    throw new Error('Failed to update account')
+  }
+}

@@ -160,5 +160,33 @@
       "shiftLegend": "Dienstinformatie",
       "selectRateType": "Selecteer aangepast tarieftype"
     }
+  },
+  "account": {
+    "title": "Accountinstellingen",
+    "personalInfo": "Persoonlijke informatie",
+    "companyInfo": "Bedrijfsinformatie",
+    "bankDetails": "Bankgegevens",
+    "firstName": "Voornaam",
+    "lastName": "Achternaam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "company": "Bedrijfsnaam",
+    "website": "Website",
+    "companyRegistrationNumber": "KvK-nummer",
+    "address": {
+      "title": "Adres",
+      "street": "Straat en huisnummer",
+      "city": "Stad",
+      "postalCode": "Postcode"
+    },
+    "bank": {
+      "name": "Banknaam",
+      "iban": "IBAN",
+      "bic": "BIC"
+    },
+    "messages": {
+      "updateSuccess": "Account succesvol bijgewerkt.",
+      "updateError": "Bijwerken account mislukt."
+    }
   }
 }

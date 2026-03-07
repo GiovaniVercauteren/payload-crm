@@ -160,5 +160,33 @@
       "shiftLegend": "Shift Info",
       "selectRateType": "Select custom rate type"
     }
+  },
+  "account": {
+    "title": "Account Settings",
+    "personalInfo": "Personal Information",
+    "companyInfo": "Company Information",
+    "bankDetails": "Bank Details",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company Name",
+    "website": "Website",
+    "companyRegistrationNumber": "Company Registration Number",
+    "address": {
+      "title": "Address",
+      "street": "Street and Number",
+      "city": "City",
+      "postalCode": "Postal Code"
+    },
+    "bank": {
+      "name": "Bank Name",
+      "iban": "IBAN",
+      "bic": "BIC"
+    },
+    "messages": {
+      "updateSuccess": "Account updated successfully.",
+      "updateError": "Failed to update account."
+    }
   }
 }
