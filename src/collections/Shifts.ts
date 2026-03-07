@@ -187,6 +187,7 @@ export const Shifts: CollectionConfig = {
           const service = await req.payload.findByID({
             collection: 'services',
             id: data.service,
+            req,
           })
 
           if (service) {
@@ -213,7 +214,8 @@ export const Shifts: CollectionConfig = {
         if (invoiceId) {
           const invoice = await req.payload.findByID({
             collection: 'invoices',
-            id: typeof invoiceId === 'object' ? invoiceId.id : invoiceId,
+            id: typeof invoiceId === 'object' && invoiceId !== null ? invoiceId.id : invoiceId,
+            req,
           })
 
           if (invoice) {
@@ -225,6 +227,7 @@ export const Shifts: CollectionConfig = {
               data: {
                 // We don't need to pass shifts, the hook will use the ones already in the doc
               },
+              req,
             })
           }
         }
@@ -234,15 +237,16 @@ export const Shifts: CollectionConfig = {
       async ({ doc, req }) => {
         // If the deleted shift was associated with an invoice, remove it from the invoice
         if (doc.invoice) {
-          const invoiceId = typeof doc.invoice === 'object' ? doc.invoice.id : doc.invoice
+          const invoiceId = typeof doc.invoice === 'object' && doc.invoice !== null ? doc.invoice.id : doc.invoice
           const invoice = await req.payload.findByID({
             collection: 'invoices',
             id: invoiceId,
+            req,
           })
 
           if (invoice) {
             const currentShiftIds = (invoice.shifts || []).map((s: any) =>
-              typeof s === 'object' ? s.id : s,
+              typeof s === 'object' && s !== null ? s.id : s,
             )
             const updatedShiftIds = currentShiftIds.filter((id: any) => id !== doc.id)
 
@@ -252,6 +256,7 @@ export const Shifts: CollectionConfig = {
               data: {
                 shifts: updatedShiftIds,
               },
+              req,
             })
           }
         }

@@ -4,9 +4,8 @@ import type {
   CollectionAfterDeleteHook,
   CollectionBeforeChangeHook,
   CollectionConfig,
-  Where,
 } from 'payload'
-import type { Shift, Invoice, User } from '@/payload-types'
+import type { Shift, User } from '@/payload-types'
 import { Admins } from './Admins'
 
 // Access control
@@ -64,14 +63,14 @@ const calculateTotalAmount: CollectionBeforeChangeHook = async ({
   operation,
   originalDoc,
 }) => {
-  let shiftIds: (string | number)[] = []
+  let shiftIds: number[] = []
 
   if (data.shifts && Array.isArray(data.shifts)) {
-    shiftIds = data.shifts.map((s) => (typeof s === 'object' ? s.id : s))
+    shiftIds = data.shifts.map((s) => (typeof s === 'object' && s !== null ? Number(s.id) : Number(s)))
   } else if (operation === 'update' && originalDoc) {
     if (originalDoc.shifts) {
-      shiftIds = (originalDoc.shifts as (string | number | Shift)[]).map((s) =>
-        typeof s === 'object' ? s.id : s,
+      shiftIds = (originalDoc.shifts as (number | Shift)[]).map((s) =>
+        typeof s === 'object' && s !== null ? Number(s.id) : Number(s),
       )
     }
   }
@@ -86,6 +85,7 @@ const calculateTotalAmount: CollectionBeforeChangeHook = async ({
       },
       depth: 0,
       pagination: false,
+      req, // Maintain transaction context
     })
 
     data.totalAmount = shifts.docs.reduce((total, shift) => total + (shift.totalPrice || 0), 0)
@@ -102,8 +102,8 @@ const createOrUpdateShiftInvoiceRelation: CollectionAfterChangeHook = async ({
   operation,
   req,
 }) => {
-  const getIds = (shifts: Shift[] | string[]) =>
-    (shifts || []).map((s) => (typeof s === 'string' ? s : s.id))
+  const getIds = (shifts: (Shift | string | number)[]) =>
+    (shifts || []).map((s) => (typeof s === 'object' && s !== null ? Number(s.id) : Number(s)))
 
   const currentShiftIds = getIds(doc.shifts)
   const previousShiftIds = getIds(previousDoc?.shifts)
@@ -112,42 +112,54 @@ const createOrUpdateShiftInvoiceRelation: CollectionAfterChangeHook = async ({
     const addedShiftIds = currentShiftIds.filter((id) => !previousShiftIds.includes(id))
 
     for (const shiftId of addedShiftIds) {
-      await req.payload.update({
-        collection: 'shifts',
-        id: shiftId,
-        data: {
-          invoice: doc.id,
-        },
-      })
+      if (shiftId) {
+        await req.payload.update({
+          collection: 'shifts',
+          id: shiftId,
+          data: {
+            invoice: doc.id,
+          },
+          req, // Maintain transaction context
+        })
+      }
     }
 
     if (operation === 'update') {
       const removedShiftIds = previousShiftIds.filter((id) => !currentShiftIds.includes(id))
 
       for (const shiftId of removedShiftIds) {
-        await req.payload.update({
-          collection: 'shifts',
-          id: shiftId,
-          data: {
-            invoice: null,
-          },
-        })
+        if (shiftId) {
+          await req.payload.update({
+            collection: 'shifts',
+            id: shiftId,
+            data: {
+              invoice: null,
+            },
+            req, // Maintain transaction context
+          })
+        }
       }
     }
   }
 }
 
 const deleteInvoiceFromShifts: CollectionAfterDeleteHook = async ({ doc, req }) => {
-  const shiftIds = (doc.shifts || []).map((s: Shift | string) => (typeof s === 'string' ? s : s.id))
+  const getIds = (shifts: (Shift | string | number)[]) =>
+    (shifts || []).map((s) => (typeof s === 'object' && s !== null ? Number(s.id) : Number(s)))
+
+  const shiftIds = getIds(doc.shifts)
 
   for (const shiftId of shiftIds) {
-    await req.payload.update({
-      collection: 'shifts',
-      id: shiftId,
-      data: {
-        invoice: null,
-      },
-    })
+    if (shiftId) {
+      await req.payload.update({
+        collection: 'shifts',
+        id: shiftId,
+        data: {
+          invoice: null,
+        },
+        req, // Maintain transaction context
+      })
+    }
   }
 }
 
