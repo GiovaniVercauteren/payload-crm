@@ -206,5 +206,56 @@ export const Shifts: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [
+      async ({ doc, previousDoc, req }) => {
+        // If the shift is associated with an invoice, update the invoice's total amount
+        const invoiceId = doc.invoice || previousDoc?.invoice
+        if (invoiceId) {
+          const invoice = await req.payload.findByID({
+            collection: 'invoices',
+            id: typeof invoiceId === 'object' ? invoiceId.id : invoiceId,
+          })
+
+          if (invoice) {
+            // Trigger an update on the invoice to recalculate totalAmount
+            // The beforeChange hook in Invoices will handle the actual calculation
+            await req.payload.update({
+              collection: 'invoices',
+              id: invoice.id,
+              data: {
+                // We don't need to pass shifts, the hook will use the ones already in the doc
+              },
+            })
+          }
+        }
+      },
+    ],
+    afterDelete: [
+      async ({ doc, req }) => {
+        // If the deleted shift was associated with an invoice, remove it from the invoice
+        if (doc.invoice) {
+          const invoiceId = typeof doc.invoice === 'object' ? doc.invoice.id : doc.invoice
+          const invoice = await req.payload.findByID({
+            collection: 'invoices',
+            id: invoiceId,
+          })
+
+          if (invoice) {
+            const currentShiftIds = (invoice.shifts || []).map((s: any) =>
+              typeof s === 'object' ? s.id : s,
+            )
+            const updatedShiftIds = currentShiftIds.filter((id: any) => id !== doc.id)
+
+            await req.payload.update({
+              collection: 'invoices',
+              id: invoiceId,
+              data: {
+                shifts: updatedShiftIds,
+              },
+            })
+          }
+        }
+      },
+    ],
   },
 }

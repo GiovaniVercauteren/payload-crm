@@ -163,6 +163,22 @@ export default function InvoiceForm({
               </FormObj.Subscribe>
             </FieldGroup>
           </FieldSet>
+          <div className="mt-4 p-4 border rounded-md bg-muted/20">
+            <FormObj.Subscribe selector={(state: any) => state.values.shifts}>
+              {(selectedShiftIds: number[]) => {
+                const total = availableShifts
+                  .filter((shift) => selectedShiftIds.includes(shift.id))
+                  .reduce((sum, shift) => sum + (shift.totalPrice || 0), 0)
+
+                return (
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold">{tInvoices('totalAmount')}</span>
+                    <span className="text-2xl font-bold">€{total.toFixed(2)}</span>
+                  </div>
+                )
+              }}
+            </FormObj.Subscribe>
+          </div>
           <Field orientation="horizontal">
             <Button type="submit">{submitText}</Button>
             <Button variant="outline" type="button" onClick={handleCancel}>
@@ -197,8 +213,18 @@ function ShiftSelector({
       fetchShifts()
     } else {
       setAvailableShifts([])
+      form.setFieldValue('shifts', [])
+      form.setFieldValue('totalAmount', 0)
     }
-  }, [clientId, setAvailableShifts])
+  }, [clientId, setAvailableShifts, form])
+
+  useEffect(() => {
+    const selectedShifts = form.getFieldValue('shifts') as number[]
+    const total = availableShifts
+      .filter((shift) => selectedShifts.includes(shift.id))
+      .reduce((sum, shift) => sum + (shift.totalPrice || 0), 0)
+    form.setFieldValue('totalAmount', total)
+  }, [availableShifts, form])
 
   if (availableShifts.length === 0) return null
 
@@ -216,13 +242,18 @@ function ShiftSelector({
                     id={`shift-${shift.id}`}
                     checked={field.state.value.includes(shift.id)}
                     onCheckedChange={(checked) => {
+                      let newValue: number[]
                       if (checked) {
-                        field.handleChange([...field.state.value, shift.id])
+                        newValue = [...field.state.value, shift.id]
                       } else {
-                        field.handleChange(
-                          field.state.value.filter((id: number) => id !== shift.id),
-                        )
+                        newValue = field.state.value.filter((id: number) => id !== shift.id)
                       }
+                      field.handleChange(newValue)
+
+                      const total = availableShifts
+                        .filter((s) => newValue.includes(s.id))
+                        .reduce((sum, s) => sum + (s.totalPrice || 0), 0)
+                      form.setFieldValue('totalAmount', total)
                     }}
                   />
                   <label

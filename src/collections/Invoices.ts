@@ -58,12 +58,25 @@ const setUserOnCreate: CollectionBeforeChangeHook = async ({ data, req, operatio
   return data
 }
 
-const calculateTotalAmount: CollectionBeforeChangeHook = async ({ data, req }) => {
-  if (data.shifts && data.shifts.length > 0) {
-    const shiftIds = (data.shifts as (string | Shift)[]).map((s) =>
-      typeof s === 'string' ? s : s.id,
-    )
+const calculateTotalAmount: CollectionBeforeChangeHook = async ({
+  data,
+  req,
+  operation,
+  originalDoc,
+}) => {
+  let shiftIds: (string | number)[] = []
 
+  if (data.shifts && Array.isArray(data.shifts)) {
+    shiftIds = data.shifts.map((s) => (typeof s === 'object' ? s.id : s))
+  } else if (operation === 'update' && originalDoc) {
+    if (originalDoc.shifts) {
+      shiftIds = (originalDoc.shifts as (string | number | Shift)[]).map((s) =>
+        typeof s === 'object' ? s.id : s,
+      )
+    }
+  }
+
+  if (shiftIds.length > 0) {
     const shifts = await req.payload.find({
       collection: 'shifts',
       where: {
@@ -182,31 +195,6 @@ export const Invoices: CollectionConfig<'invoices'> = {
       relationTo: 'shifts',
       hasMany: true,
       required: true,
-      filterOptions: ({ data, user }) => {
-        if (!data?.client || !user || !user.id) return false
-
-        const query: Where = {
-          and: [
-            {
-              client: {
-                equals: data.client,
-              },
-            },
-            {
-              invoice: {
-                equals: null,
-              },
-            },
-            {
-              user: {
-                equals: user.id,
-              },
-            },
-          ],
-        }
-
-        return query
-      },
     },
     {
       name: 'totalAmount',
