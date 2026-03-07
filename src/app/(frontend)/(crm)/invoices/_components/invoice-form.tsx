@@ -126,7 +126,13 @@ export default function InvoiceForm({
                       <FieldLabel htmlFor={field.name}>{tInvoices('client')}</FieldLabel>
                       <Select
                         name={field.name}
-                        onValueChange={(value) => field.handleChange(Number(value))}
+                        onValueChange={(value) => {
+                          const newClientId = Number(value)
+                          field.handleChange(newClientId)
+                          // Reset shifts when client changes
+                          form.setFieldValue('shifts', [])
+                          form.setFieldValue('totalAmount', 0)
+                        }}
                         defaultValue={field.state.value ? field.state.value.toString() : undefined}
                         aria-invalid={isInvalid}
                       >
