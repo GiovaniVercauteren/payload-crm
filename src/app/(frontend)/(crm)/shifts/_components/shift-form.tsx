@@ -26,7 +26,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getClientsAction } from '../../clients/actions'
 import { getServicesAction } from '../../services/actions'
-import { DateTimePicker } from '@/components/ui/date-time-picker'
+import { SplitDateTimePicker } from '@/components/ui/split-date-time-picker'
 
 const statuses = ['scheduled', 'completed', 'cancelled'] as const
 type ShiftStatus = (typeof statuses)[number]
@@ -236,7 +236,7 @@ export default function ShiftForm({
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>{tShifts('startDate')}</FieldLabel>
-                      <DateTimePicker
+                      <SplitDateTimePicker
                         value={field.state.value}
                         onChange={(value) => field.handleChange(value)}
                       />
@@ -252,7 +252,7 @@ export default function ShiftForm({
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>{tShifts('endDate')}</FieldLabel>
-                      <DateTimePicker
+                      <SplitDateTimePicker
                         value={field.state.value}
                         onChange={(value) => field.handleChange(value)}
                       />
