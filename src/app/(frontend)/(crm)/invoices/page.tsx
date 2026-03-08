@@ -15,6 +15,7 @@ import { FileText } from 'lucide-react'
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<PaginatedDocs<Invoice> | null>(null)
   const tCommon = useTranslations('common')
+  const tInvoices = useTranslations('invoices')
   const tInvoicesCreate = useTranslations('invoices.create')
 
   const fetchInvoices = useCallback(async () => {
@@ -26,7 +27,7 @@ export default function InvoicesPage() {
     fetchInvoices()
   }, [fetchInvoices])
 
-  const columns = useMemo(() => getColumns(fetchInvoices), [fetchInvoices])
+  const columns = useMemo(() => getColumns(fetchInvoices, tInvoices), [fetchInvoices, tInvoices])
 
   if (invoices && invoices.docs.length === 0) {
     return (

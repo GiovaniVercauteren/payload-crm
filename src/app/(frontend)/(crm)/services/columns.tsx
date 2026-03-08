@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { Service } from '@/payload-types'
-import { useTranslations } from 'next-intl'
+import { useFormatter, useTranslations } from 'next-intl'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -103,26 +103,30 @@ const ActionCell = ({ service, onDelete }: ActionCellProps) => {
   )
 }
 
-export const getColumns = (onDelete: () => void): ColumnDef<Service>[] => [
+export const getColumns = (
+  onDelete: () => void,
+  t: (key: string) => string,
+): ColumnDef<Service>[] => [
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: t('name'),
   },
   {
     accessorKey: 'rateType',
-    header: 'Rate Type',
+    header: t('rateType'),
     cell: ({ row }) => {
-      const t = useTranslations('services.rateTypes')
+      const tRateTypes = useTranslations('services.rateTypes')
       const type = row.original.rateType
 
-      return <>{t(type)}</>
+      return <>{tRateTypes(type)}</>
     },
   },
   {
     accessorKey: 'rate',
-    header: 'Rate',
+    header: t('rate'),
     cell: ({ row }) => {
-      return <>€{row.original.rate.toFixed(2)}</>
+      const format = useFormatter()
+      return <>{format.number(row.original.rate, { style: 'currency', currency: 'EUR' })}</>
     },
   },
   {

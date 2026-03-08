@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { Invoice } from '@/payload-types'
-import { useTranslations } from 'next-intl'
+import { useFormatter, useTranslations } from 'next-intl'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -97,14 +97,17 @@ const ActionCell = ({ invoice, onDelete }: ActionCellProps) => {
   )
 }
 
-export const getColumns = (onDelete: () => void): ColumnDef<Invoice>[] => [
+export const getColumns = (
+  onDelete: () => void,
+  t: (key: string) => string,
+): ColumnDef<Invoice>[] => [
   {
     accessorKey: 'invoiceNumber',
-    header: 'Invoice Number',
+    header: t('invoiceNumber'),
   },
   {
     accessorKey: 'client',
-    header: 'Client',
+    header: t('client'),
     cell: ({ row }) => {
       const client = row.original.client
       return <>{typeof client === 'object' ? client.name : client}</>
@@ -112,16 +115,22 @@ export const getColumns = (onDelete: () => void): ColumnDef<Invoice>[] => [
   },
   {
     accessorKey: 'totalAmount',
-    header: 'Amount',
+    header: t('totalAmount'),
     cell: ({ row }) => {
-      return <>€{row.original.totalAmount.toFixed(2)}</>
+      const format = useFormatter()
+      return (
+        <>{format.number(row.original.totalAmount, { style: 'currency', currency: 'EUR' })}</>
+      )
     },
   },
   {
     accessorKey: 'createdAt',
-    header: 'Date',
+    header: t('date'),
     cell: ({ row }) => {
-      return <>{new Date(row.original.createdAt).toLocaleDateString()}</>
+      const format = useFormatter()
+      return (
+        <>{format.dateTime(new Date(row.original.createdAt), { dateStyle: 'medium' })}</>
+      )
     },
   },
   {

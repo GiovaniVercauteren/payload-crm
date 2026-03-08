@@ -64,6 +64,11 @@ export const Users: CollectionConfig = {
       required: true,
     },
     {
+      name: 'logo',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
       name: 'phone',
       type: 'text',
       required: true,

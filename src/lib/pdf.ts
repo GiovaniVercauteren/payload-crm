@@ -6,9 +6,6 @@ export async function generatePDF(htmlContent: string): Promise<Buffer> {
   const blob = new Blob([htmlContent], { type: 'text/html' })
   formData.append('index.html', blob, 'index.html')
 
-  console.log('Sending HTML content to Gotenberg for PDF generation...')
-  console.log('HTML Content:', htmlContent)
-
   const response = await fetch(`${GOTENBERG_URL}/forms/chromium/convert/html`, {
     method: 'POST',
     body: formData,

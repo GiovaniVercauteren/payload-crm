@@ -1,7 +1,7 @@
 'use client'
 
-import { Invoice, Shift } from '@/payload-types'
-import { useTranslations } from 'next-intl'
+import { Invoice, Shift, Service } from '@/payload-types'
+import { useFormatter, useTranslations } from 'next-intl'
 import {
   Card,
   CardContent,
@@ -32,6 +32,7 @@ interface InvoiceDetailsProps {
 export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
   const t = useTranslations('invoices')
   const tCommon = useTranslations('common')
+  const format = useFormatter()
   const [isGenerating, setIsGenerating] = useState(false)
 
   const handleDownload = async () => {
@@ -87,11 +88,13 @@ export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <Label className="text-muted-foreground">{t('date')}</Label>
-            <p>{new Date(invoice.createdAt).toLocaleDateString()}</p>
+            <p>{format.dateTime(new Date(invoice.createdAt), { dateStyle: 'medium' })}</p>
           </div>
           <div className="space-y-1 text-right">
             <Label className="text-muted-foreground">{t('totalAmount')}</Label>
-            <p className="text-2xl font-bold">€{invoice.totalAmount.toFixed(2)}</p>
+            <p className="text-2xl font-bold">
+              {format.number(invoice.totalAmount, { style: 'currency', currency: 'EUR' })}
+            </p>
           </div>
         </div>
 
@@ -102,21 +105,50 @@ export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Service</TableHead>
-                <TableHead className="text-right">Price</TableHead>
+                <TableHead>{t('date')}</TableHead>
+                <TableHead>{t('time')}</TableHead>
+                <TableHead className="text-center">{t('duration')}</TableHead>
+                <TableHead className="text-center">{t('break')}</TableHead>
+                <TableHead>{t('service')}</TableHead>
+                <TableHead className="text-right">{t('rate')}</TableHead>
+                <TableHead className="text-right">{tCommon('totalPrice')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(invoice.shifts as Shift[]).map((shift) => (
-                <TableRow key={shift.id}>
-                  <TableCell>{new Date(shift.startDate).toLocaleString()}</TableCell>
-                  <TableCell>
-                    {typeof shift.service === 'object' ? shift.service.name : shift.service}
-                  </TableCell>
-                  <TableCell className="text-right">€{shift.totalPrice.toFixed(2)}</TableCell>
-                </TableRow>
-              ))}
+              {(invoice.shifts as Shift[]).map((shift) => {
+                const service = shift.service as Service
+                const start = new Date(shift.startDate)
+                const end = new Date(shift.endDate)
+                const durationHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60)
+                const breakHours = (shift.breakDuration || 0) / 60
+                const netHours = durationHours - breakHours
+
+                let rateStr = 'Fixed'
+                if (
+                  shift.customRateType === 'hourly' ||
+                  (!shift.customRate && service.rateType === 'hourly')
+                ) {
+                  const rate = shift.customRate || service.rate
+                  rateStr = format.number(rate, { style: 'currency', currency: 'EUR' }) + '/h'
+                }
+
+                return (
+                  <TableRow key={shift.id}>
+                    <TableCell>{format.dateTime(start, { dateStyle: 'medium' })}</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {format.dateTime(start, { hour: '2-digit', minute: '2-digit', hour12: false })} -{' '}
+                      {format.dateTime(end, { hour: '2-digit', minute: '2-digit', hour12: false })}
+                    </TableCell>
+                    <TableCell className="text-center">{netHours.toFixed(2)}h</TableCell>
+                    <TableCell className="text-center">{shift.breakDuration || 0}m</TableCell>
+                    <TableCell>{service.name}</TableCell>
+                    <TableCell className="text-right">{rateStr}</TableCell>
+                    <TableCell className="text-right">
+                      {format.number(shift.totalPrice, { style: 'currency', currency: 'EUR' })}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </div>

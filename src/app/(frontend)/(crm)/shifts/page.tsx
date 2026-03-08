@@ -13,8 +13,9 @@ import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from '@/
 import { Calendar } from 'lucide-react'
 
 export default function ShiftsPage() {
-  const [shifts, setShifts] = useState<PaginatedDocs<Shift> | null>(null)
+  const [shifts, setShifts] = useState<Shift[]>([])
   const tCommon = useTranslations('common')
+  const tShifts = useTranslations('shifts')
   const tShiftsCreate = useTranslations('shifts.create')
 
   const fetchShifts = useCallback(async () => {
@@ -26,13 +27,14 @@ export default function ShiftsPage() {
     fetchShifts()
   }, [fetchShifts])
 
-  const columns = useMemo(() => getColumns(fetchShifts), [fetchShifts])
+  const columns = useMemo(() => getColumns(fetchShifts, tShifts), [fetchShifts, tShifts])
+
 
   if (shifts && shifts.docs.length === 0) {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Shifts</h1>
+          <h1 className="text-2xl font-bold">{tCommon('shifts')}</h1>
           <Button asChild>
             <Link href="/shifts/create">{tShiftsCreate('createShift')}</Link>
           </Button>
@@ -53,7 +55,7 @@ export default function ShiftsPage() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Shifts</h1>
+        <h1 className="text-2xl font-bold">{tCommon('shifts')}</h1>
         <Button asChild>
           <Link href="/shifts/create">{tShiftsCreate('createShift')}</Link>
         </Button>

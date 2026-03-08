@@ -57,3 +57,42 @@ export async function updateAccountAction(data: any) {
     throw new Error('Failed to update account')
   }
 }
+
+export async function uploadMediaAction(formData: FormData) {
+  const headers = await getHeaders()
+  const payload = await getPayload({ config })
+  const { user } = await payload.auth({ headers })
+
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  const file = formData.get('file') as File
+  if (!file) {
+    throw new Error('No file provided')
+  }
+
+  const arrayBuffer = await file.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
+
+  try {
+    const media = await payload.create({
+      collection: 'media',
+      data: {
+        alt: file.name,
+      },
+      file: {
+        data: buffer,
+        name: file.name,
+        mimetype: file.type,
+        size: file.size,
+      },
+      overrideAccess: false,
+      user,
+    })
+    return media
+  } catch (error) {
+    console.error('Failed to upload media:', error)
+    throw new Error('Failed to upload media')
+  }
+}

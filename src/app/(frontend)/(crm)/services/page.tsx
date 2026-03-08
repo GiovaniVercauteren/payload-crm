@@ -12,7 +12,9 @@ import { useTranslations } from 'next-intl'
 
 export default function ServicesPage() {
   const [services, setServices] = useState<PaginatedDocs<Service> | null>(null)
-  const t = useTranslations('services.create')
+  const tCommon = useTranslations('common')
+  const tServices = useTranslations('services')
+  const tCreate = useTranslations('services.create')
 
   const fetchServices = useCallback(async () => {
     const services = await getServicesAction()
@@ -23,14 +25,14 @@ export default function ServicesPage() {
     fetchServices()
   }, [fetchServices])
 
-  const columns = useMemo(() => getColumns(fetchServices), [fetchServices])
+  const columns = useMemo(() => getColumns(fetchServices, tServices), [fetchServices, tServices])
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Services</h1>
+        <h1 className="text-2xl font-bold">{tCommon('services')}</h1>
         <Button asChild>
-          <Link href="/services/create">{t('createService')}</Link>
+          <Link href="/services/create">{tCreate('createService')}</Link>
         </Button>
       </div>
       <DataTable data={services?.docs || []} columns={columns} />

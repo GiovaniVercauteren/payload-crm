@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { Shift } from '@/payload-types'
-import { useTranslations } from 'next-intl'
+import { useFormatter, useTranslations } from 'next-intl'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -99,17 +99,21 @@ const ActionCell = ({ shift, onDelete }: ActionCellProps) => {
   )
 }
 
-export const getColumns = (onDelete: () => void): ColumnDef<Shift>[] => [
+export const getColumns = (
+  onDelete: () => void,
+  t: (key: string) => string,
+): ColumnDef<Shift>[] => [
   {
     accessorKey: 'startDate',
-    header: 'Date',
+    header: t('startDate'),
     cell: ({ row }) => {
-      return <>{new Date(row.original.startDate).toLocaleDateString()}</>
+      const format = useFormatter()
+      return <>{format.dateTime(new Date(row.original.startDate), { dateStyle: 'medium' })}</>
     },
   },
   {
     accessorKey: 'client',
-    header: 'Client',
+    header: t('client'),
     cell: ({ row }) => {
       const client = row.original.client
       return <>{typeof client === 'object' ? client.name : client}</>
@@ -117,7 +121,7 @@ export const getColumns = (onDelete: () => void): ColumnDef<Shift>[] => [
   },
   {
     accessorKey: 'service',
-    header: 'Service',
+    header: t('service'),
     cell: ({ row }) => {
       const service = row.original.service
       return <>{typeof service === 'object' ? service.name : service}</>
@@ -125,17 +129,18 @@ export const getColumns = (onDelete: () => void): ColumnDef<Shift>[] => [
   },
   {
     accessorKey: 'totalPrice',
-    header: 'Total Price',
+    header: t('totalPrice'),
     cell: ({ row }) => {
-      return <>€{row.original.totalPrice.toFixed(2)}</>
+      const format = useFormatter()
+      return <>{format.number(row.original.totalPrice, { style: 'currency', currency: 'EUR' })}</>
     },
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: t('status'),
     cell: ({ row }) => {
-      const t = useTranslations('shifts.statuses')
-      return <>{t(row.original.status)}</>
+      const tStatuses = useTranslations('shifts.statuses')
+      return <>{tStatuses(row.original.status)}</>
     },
   },
   {

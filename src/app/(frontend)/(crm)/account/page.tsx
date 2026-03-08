@@ -18,12 +18,14 @@ import { toast } from 'sonner'
 import { updateAccountAction } from '../../_providers/auth/actions'
 import { User } from '@/payload-types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { LogoUpload } from './_components/logo-upload'
 
 const formSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   phone: z.string().min(1),
   company: z.string().min(1),
+  logo: z.any().optional().nullable(),
   website: z.string().optional().nullable(),
   companyRegistrationNumber: z.string().min(1),
   address: z.object({
@@ -76,6 +78,7 @@ function AccountForm({ user }: { user: User }) {
       lastName: user.lastName || '',
       phone: user.phone || '',
       company: user.company || '',
+      logo: user.logo || null,
       website: user.website || '',
       companyRegistrationNumber: user.companyRegistrationNumber || '',
       address: {
@@ -163,6 +166,13 @@ function AccountForm({ user }: { user: User }) {
 
           <FieldSet>
             <FieldLegend>{tAccount('companyInfo')}</FieldLegend>
+            <div className="mb-4">
+              <FormObj.Field name="logo">
+                {(field: any) => (
+                  <LogoUpload value={field.state.value} onChange={(v) => field.handleChange(v)} />
+                )}
+              </FormObj.Field>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormObj.Field name="company">
                 {(field: any) => (
