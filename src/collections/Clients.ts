@@ -142,7 +142,6 @@ export const Clients: CollectionConfig = {
       hooks: {
         beforeChange: [
           ({ value, operation, req: { user } }) => {
-            console.log('Before change hook triggered for user field:', { value, operation, user })
             if (operation === 'create' && !value && user) {
               value = user.id
             }

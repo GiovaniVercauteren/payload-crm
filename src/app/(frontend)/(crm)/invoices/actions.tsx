@@ -1,10 +1,12 @@
 'use server'
 
-import { Invoice, Shift } from '@/payload-types'
+import { Invoice, Shift, Client } from '@/payload-types'
 import { CreateData } from '../../types'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { headers } from 'next/headers'
+import { getTranslations } from 'next-intl/server'
+import { generatePDF } from '@/lib/pdf'
 
 async function getCurrentPayloadUser() {
   const payload = await getPayload({ config })
@@ -15,7 +17,7 @@ async function getCurrentPayloadUser() {
     throw new Error('Unauthorized')
   }
 
-  return { payload, user }
+  return { payload, user, requestHeaders }
 }
 
 export async function getInvoicesAction() {
@@ -34,7 +36,7 @@ export async function getInvoicesAction() {
       overrideAccess: false,
       user,
     })
-    return invoices
+    return JSON.parse(JSON.stringify(invoices))
   } catch (error) {
     throw new Error(
       `Failed to fetch invoices: ${error instanceof Error ? error.message : String(error)}`,
@@ -51,7 +53,7 @@ export async function getInvoiceAction(invoiceId: string | number) {
       overrideAccess: false,
       user,
     })
-    return invoice
+    return JSON.parse(JSON.stringify(invoice))
   } catch (error) {
     throw new Error(
       `Failed to fetch invoice: ${error instanceof Error ? error.message : String(error)}`,
@@ -71,8 +73,9 @@ export async function createInvoiceAction(data: CreateData<Invoice>) {
       } as any,
       overrideAccess: false,
       user,
+      depth: 0,
     })
-    return newInvoice
+    return JSON.parse(JSON.stringify(newInvoice))
   } catch (error) {
     throw new Error(
       `Failed to create invoice: ${error instanceof Error ? error.message : String(error)}`,
@@ -89,8 +92,9 @@ export async function updateInvoiceAction(invoiceId: string | number, data: Crea
       data,
       overrideAccess: false,
       user,
+      depth: 0,
     })
-    return updatedInvoice
+    return JSON.parse(JSON.stringify(updatedInvoice))
   } catch (error) {
     throw new Error(
       `Failed to update invoice: ${error instanceof Error ? error.message : String(error)}`,
@@ -143,10 +147,34 @@ export async function getUninvoicedShiftsAction(clientId: string | number) {
       overrideAccess: false,
       user,
     })
-    return shifts.docs
+    return JSON.parse(JSON.stringify(shifts.docs))
   } catch (error) {
     throw new Error(
       `Failed to fetch uninvoiced shifts: ${error instanceof Error ? error.message : String(error)}`,
+    )
+  }
+}
+
+export async function generateInvoicePDFAction(invoiceId: string | number) {
+  const { requestHeaders } = await getCurrentPayloadUser()
+
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/invoice/${invoiceId}/html`, {
+      headers: requestHeaders,
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch HTML: ${response.statusText}`)
+    }
+
+    const html = await response.text()
+    const pdfBuffer = await generatePDF(html)
+    return pdfBuffer.toString('base64')
+  } catch (error) {
+    console.error('PDF Generation Error:', error)
+    throw new Error(
+      `Failed to generate PDF: ${error instanceof Error ? error.message : String(error)}`,
     )
   }
 }

@@ -19,6 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { FileDown, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { generateInvoicePDFAction } from '../actions'
+import { toast } from 'sonner'
 
 interface InvoiceDetailsProps {
   invoice: Invoice
@@ -26,14 +31,57 @@ interface InvoiceDetailsProps {
 
 export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
   const t = useTranslations('invoices')
+  const tCommon = useTranslations('common')
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  const handleDownload = async () => {
+    setIsGenerating(true)
+    try {
+      const base64 = await generateInvoicePDFAction(invoice.id)
+      const binary = atob(base64)
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i)
+      }
+      const blob = new Blob([bytes], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `invoice-${invoice.invoiceNumber}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      toast.success('PDF generated successfully')
+    } catch (error) {
+      console.error('Failed to generate PDF:', error)
+      toast.error('Failed to generate PDF')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   return (
     <Card className="max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle>{invoice.invoiceNumber}</CardTitle>
-        <CardDescription>
-          {typeof invoice.client === 'object' ? invoice.client.name : invoice.client}
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div>
+          <CardTitle>{invoice.invoiceNumber}</CardTitle>
+          <CardDescription>
+            {typeof invoice.client === 'object' ? invoice.client.name : invoice.client}
+          </CardDescription>
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={handleDownload} 
+          disabled={isGenerating}
+        >
+          {isGenerating ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <FileDown className="mr-2 h-4 w-4" />
+          )}
+          {tCommon('downloadPdf')}
+        </Button>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">

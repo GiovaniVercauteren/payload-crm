@@ -20,6 +20,9 @@
     "error": "Er is een fout opgetreden. Probeer het opnieuw.",
     "yes": "Ja",
     "no": "Nee",
+    "downloadPdf": "Download PDF",
+    "from": "Van",
+    "to": "Aan",
     "deleteConfirmation": {
       "title": "Weet je het zeker?",
       "description": "Deze actie kan niet ongedaan worden gemaakt. Dit zal het item permanent verwijderen.",

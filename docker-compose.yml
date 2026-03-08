@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   payload:
     image: node:24-alpine
@@ -10,9 +8,12 @@ services:
       - node_modules:/home/node/app/node_modules
     working_dir: /home/node/app/
     command: sh -c "npm ci && npm run dev"
+    stdin_open: true # Equivalent to -i
+    tty: true # Equivalent to -t
     depends_on:
       # - mongo
       - postgres
+      - gotenberg
     env_file:
       - .env
 
@@ -34,10 +35,10 @@ services:
     image: postgres:latest
     volumes:
       - pgdata:/var/lib/postgresql/
-    ports:
-      - '5432:5432'
     env_file:
       - .env
+  gotenberg:
+    image: gotenberg/gotenberg:8
 
 volumes:
   data:
