@@ -2,6 +2,8 @@ services:
   payload:
     image: ghcr.io/giovanivercauteren/payload-crm:latest
     restart: unless-stopped
+    volumes:
+      - media_data:/app/media
     env_file:
       - .env
     depends_on:
@@ -44,6 +46,7 @@ services:
 
 volumes:
   pgdata:
+  media_data:
 
 networks:
   proxy:
