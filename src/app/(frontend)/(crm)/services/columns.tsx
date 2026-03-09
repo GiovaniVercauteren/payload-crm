@@ -126,7 +126,9 @@ export const getColumns = (
     header: t('rate'),
     cell: ({ row }) => {
       const format = useFormatter()
-      return <>{format.number(row.original.rate, { style: 'currency', currency: 'EUR' })}</>
+      const tCommon = useTranslations('common')
+      const unit = row.original.rateType === 'hourly' ? `/${tCommon('hoursUnit')}` : ''
+      return <>{format.number(row.original.rate, { style: 'currency', currency: 'EUR' })}{unit}</>
     },
   },
   {

@@ -107,8 +107,7 @@ export const getColumns = (
     accessorKey: 'startDate',
     header: t('startDate'),
     cell: ({ row }) => {
-      const format = useFormatter()
-      return <>{format.dateTime(new Date(row.original.startDate), { dateStyle: 'medium' })}</>
+      return <>{new Date(row.original.startDate).toLocaleDateString('nl-BE', { timeZone: 'Europe/Brussels' })}</>
     },
   },
   {

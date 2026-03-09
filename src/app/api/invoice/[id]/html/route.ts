@@ -81,6 +81,7 @@ export async function GET(
       startTime: tInvoices('startTime'),
       endTime: tInvoices('endTime'),
       duration: tInvoices('duration'),
+      hoursUnit: tCommon('hoursUnit'),
       break: tInvoices('break'),
       rate: tInvoices('rate'),
       from: tCommon('from'),
@@ -89,6 +90,10 @@ export async function GET(
       iban: tAccount('bank.iban'),
       bic: tAccount('bank.bic'),
       companyRegistrationNumber: tAccount('companyRegistrationNumber'),
+      vatExemption: tInvoices('vatExemption'),
+      notesTitle: tInvoices('notes.title'),
+      paymentTerms: tInvoices('notes.paymentTerms'),
+      conditions: tInvoices('notes.conditions', { name: user.nickname || user.firstName }),
     },
   })
 

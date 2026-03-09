@@ -24,6 +24,7 @@
     "from": "Van",
     "to": "Aan",
     "totalPrice": "Totaalprijs",
+    "hoursUnit": "u",
     "deleteConfirmation": {
       "title": "Weet je het zeker?",
       "description": "Deze actie kan niet ongedaan worden gemaakt. Dit zal het item permanent verwijderen.",
@@ -122,8 +123,15 @@
     "break": "Pauze",
     "rate": "Tarief",
     "service": "Dienst",
+    "invoiceNumberPlaceholder": "Automatisch gegenereerd indien leeg (bijv. OZ-2026-001)",
     "editInvoice": "Factuur bewerken",
     "invoiceDetails": "Factuurdetails",
+    "vatExemption": "Vrijgesteld van BTW volgens Artikel 44 van het BTW wetboek, binnen het kader van Vrije beroepen en KOR.",
+    "notes": {
+      "title": "Opmerkingen & Voorwaarden",
+      "paymentTerms": "Ik verzoek u vriendelijk het verschuldigde bedrag binnen de 30 dagen over te maken onder vermelding van het factuurnummer",
+      "conditions": "Op alle diensten zijn onze algemene voorwaarden van toepassing. In geval van vragen, contacteer {name}."
+    },
     "messages": {
       "createSuccess": "Factuur succesvol aangemaakt.",
       "createError": "Factuur aanmaken mislukt.",
@@ -179,13 +187,14 @@
     "bankDetails": "Bankgegevens",
     "firstName": "Voornaam",
     "lastName": "Achternaam",
+    "nickname": "Roepnaam",
     "email": "E-mail",
     "phone": "Telefoon",
     "logo": "Logo",
     "logoPlaceholder": "Geen logo geüpload",
     "company": "Bedrijfsnaam",
     "website": "Website",
-    "companyRegistrationNumber": "KvK-nummer",
+    "companyRegistrationNumber": "KBO-nummer",
     "address": {
       "title": "Adres",
       "street": "Straat en huisnummer",

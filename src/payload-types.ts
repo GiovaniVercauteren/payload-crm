@@ -181,6 +181,7 @@ export interface User {
   id: number;
   firstName: string;
   lastName: string;
+  nickname?: string | null;
   company: string;
   logo?: (number | null) | Media;
   phone: string;
@@ -477,6 +478,7 @@ export interface AdminsSelect<T extends boolean = true> {
 export interface UsersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
+  nickname?: T;
   company?: T;
   logo?: T;
   phone?: T;

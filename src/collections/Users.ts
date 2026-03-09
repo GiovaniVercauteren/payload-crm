@@ -59,6 +59,11 @@ export const Users: CollectionConfig = {
       required: true,
     },
     {
+      saveToJWT: true,
+      name: 'nickname',
+      type: 'text',
+    },
+    {
       name: 'company',
       type: 'text',
       required: true,

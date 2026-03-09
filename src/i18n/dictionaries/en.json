@@ -24,6 +24,7 @@
     "from": "From",
     "to": "To",
     "totalPrice": "Total Price",
+    "hoursUnit": "h",
     "deleteConfirmation": {
       "title": "Are you absolutely sure?",
       "description": "This action cannot be undone. This will permanently delete the item.",
@@ -122,8 +123,15 @@
     "break": "Break",
     "rate": "Rate",
     "service": "Service",
+    "invoiceNumberPlaceholder": "Auto-generated if left empty (e.g. OZ-2026-001)",
     "editInvoice": "Edit Invoice",
     "invoiceDetails": "Invoice Details",
+    "vatExemption": "Exempt from VAT according to Article 44 of the VAT Code, within the framework of Liberal professions and KOR.",
+    "notes": {
+      "title": "Notes & Conditions",
+      "paymentTerms": "Please transfer the outstanding amount within 30 days, stating the invoice number.",
+      "conditions": "Our general terms and conditions apply to all services. In case of questions, contact {name}."
+    },
     "messages": {
       "createSuccess": "Invoice created successfully.",
       "createError": "Failed to create invoice.",
@@ -179,6 +187,7 @@
     "bankDetails": "Bank Details",
     "firstName": "First Name",
     "lastName": "Last Name",
+    "nickname": "Nickname",
     "email": "Email",
     "phone": "Phone",
     "logo": "Logo",

@@ -38,9 +38,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
         <div>
           <h3 className="text-lg font-semibold mb-2">{t('create.serviceLegend')}</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
+            <div className="space-y-1 text-right">
               <Label className="text-muted-foreground">{t('rate')}</Label>
-              <p>€{service.rate.toFixed(2)}</p>
+              <p>€{service.rate.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{service.rateType === 'hourly' ? `/${tCommon('hoursUnit')}` : ''}</p>
             </div>
             <div className="space-y-1">
               <Label className="text-muted-foreground">{t('deprecated')}</Label>

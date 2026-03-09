@@ -24,10 +24,16 @@ export default function ShiftDetails({ shift }: ShiftDetailsProps) {
   const tServices = useTranslations('services')
   const tCommon = useTranslations('common')
 
+  const nlBE = 'nl-BE'
+  const timeZone = 'Europe/Brussels'
+
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>{new Date(shift.startDate).toLocaleString()}</CardTitle>
+        <CardTitle>
+          {new Date(shift.startDate).toLocaleDateString(nlBE, { timeZone })}{' '}
+          {new Date(shift.startDate).toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', timeZone })}
+        </CardTitle>
         <CardDescription>
           {typeof shift.client === 'object' ? shift.client.name : shift.client}
         </CardDescription>
@@ -41,11 +47,17 @@ export default function ShiftDetails({ shift }: ShiftDetailsProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <Label className="text-muted-foreground">{t('startDate')}</Label>
-            <p>{new Date(shift.startDate).toLocaleString()}</p>
+            <p>
+              {new Date(shift.startDate).toLocaleDateString(nlBE, { timeZone })}{' '}
+              {new Date(shift.startDate).toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', timeZone })}
+            </p>
           </div>
           <div className="space-y-1 text-right">
             <Label className="text-muted-foreground">{t('endDate')}</Label>
-            <p>{new Date(shift.endDate).toLocaleString()}</p>
+            <p>
+              {new Date(shift.endDate).toLocaleDateString(nlBE, { timeZone })}{' '}
+              {new Date(shift.endDate).toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', timeZone })}
+            </p>
           </div>
           <div className="space-y-1">
             <Label className="text-muted-foreground">{t('breakDuration')}</Label>
@@ -66,13 +78,17 @@ export default function ShiftDetails({ shift }: ShiftDetailsProps) {
           </div>
           <div className="space-y-1 text-right">
             <Label className="text-muted-foreground">{t('totalPrice')}</Label>
-            <p className="text-xl font-bold">€{shift.totalPrice.toFixed(2)}</p>
+            <p className="text-xl font-bold">
+              €{shift.totalPrice.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
           </div>
           {shift.customRate !== null && shift.customRate !== undefined && (
             <>
               <div className="space-y-1">
                 <Label className="text-muted-foreground">{t('customRate')}</Label>
-                <p>€{shift.customRate.toFixed(2)}</p>
+                <p>
+                  €{shift.customRate.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{shift.customRateType === 'hourly' ? `/${tCommon('hoursUnit')}` : ''}
+                </p>
               </div>
               <div className="space-y-1 text-right">
                 <Label className="text-muted-foreground">{t('customRateType')}</Label>

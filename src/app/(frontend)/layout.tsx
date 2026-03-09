@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { ThemeProvider } from 'next-themes'
 import ThemeToggle from './_components/theme-toggle'
 import { NextIntlClientProvider } from 'next-intl'
+import { cookies } from 'next/headers'
 
 export const metadata = {
   description: 'Oasezorg CRM Frontend built with Next.js and Payload CMS',
@@ -12,10 +13,13 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies()
+  const locale = cookieStore.get('language')?.value || 'en'
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body>
-        <NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale}>
           <AuthProvider>
             <ThemeProvider
               attribute="class"

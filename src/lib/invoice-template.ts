@@ -18,6 +18,7 @@ interface InvoiceTemplateOptions {
     startTime: string
     endTime: string
     duration: string
+    hoursUnit: string
     break: string
     rate: string
     from: string
@@ -26,6 +27,10 @@ interface InvoiceTemplateOptions {
     iban: string
     bic: string
     companyRegistrationNumber: string
+    vatExemption: string
+    notesTitle: string
+    paymentTerms: string
+    conditions: string
   }
 }
 
@@ -41,10 +46,16 @@ export function renderInvoiceHtml({
   
   const logo = typeof user.logo === 'object' ? (user.logo as Media) : null
   const logoSrc = logoDataUrl || (logo?.url ? `${baseUrl || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}${logo.url}` : null)
-  
+
   const logoHtml = logoSrc 
-    ? `<img src="${logoSrc}" alt="${logo?.alt || 'Logo'}" style="max-height: 60px; max-width: 180px; margin-bottom: 5px;" />`
+    ? `<div style="display: flex; align-items: center; gap: 15px;">
+         <img src="${logoSrc}" alt="${logo?.alt || 'Logo'}" style="max-height: 60px; max-width: 180px;" />
+         <p style="font-weight: bold; font-size: 18px; margin: 0;">${user.company}</p>
+       </div>`
     : `<h1 style="margin: 0; font-size: 20px;">${user.company}</h1>`
+
+  const nlBE = 'nl-BE'
+  const timeZone = 'Europe/Brussels'
 
   const rows = shifts.map(shift => {
     const service = shift.service as Service
@@ -57,18 +68,18 @@ export function renderInvoiceHtml({
     let rateStr = 'Fixed'
     if (shift.customRateType === 'hourly' || (!shift.customRate && service.rateType === 'hourly')) {
       const rate = shift.customRate || service.rate
-      rateStr = `€${rate.toFixed(2)}/h`
+      rateStr = `€${rate.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/${translations.hoursUnit}`
     }
 
     return `
       <tr>
-        <td style="white-space: nowrap;">${start.toLocaleDateString()}</td>
-        <td style="white-space: nowrap;">${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })} - ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</td>
-        <td style="text-align: center;">${netHours.toFixed(2)}h</td>
+        <td style="white-space: nowrap;">${start.toLocaleDateString(nlBE, { timeZone })}</td>
+        <td style="white-space: nowrap;">${start.toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone })} - ${end.toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone })}</td>
+        <td style="text-align: center;">${netHours.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${translations.hoursUnit}</td>
         <td style="text-align: center;">${shift.breakDuration || 0}m</td>
         <td>${service.name}</td>
         <td style="text-align: right; white-space: nowrap;">${rateStr}</td>
-        <td style="text-align: right; white-space: nowrap;">€${shift.totalPrice.toFixed(2)}</td>
+        <td style="text-align: right; white-space: nowrap;">€${shift.totalPrice.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
       </tr>
     `
   }).join('')
@@ -100,12 +111,11 @@ export function renderInvoiceHtml({
         <div class="header">
           <div class="company-info">
             ${logoHtml}
-            <p style="font-weight: bold;">${user.firstName} ${user.lastName}</p>
           </div>
           <div class="invoice-info">
             <h2>Invoice</h2>
             <p><strong>${translations.invoiceNumber}:</strong> ${invoice.invoiceNumber}</p>
-            <p><strong>${translations.date}:</strong> ${new Date(invoice.createdAt).toLocaleDateString()}</p>
+            <p><strong>${translations.date}:</strong> ${new Date(invoice.createdAt).toLocaleDateString(nlBE, { timeZone })}</p>
           </div>
         </div>
 
@@ -149,10 +159,17 @@ export function renderInvoiceHtml({
         </table>
 
         <div class="total">
-          ${translations.totalAmount}: €${invoice.totalAmount.toFixed(2)}
+          ${translations.totalAmount}: €${invoice.totalAmount.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </div>
+
+        <div style="margin-top: 20px;">
+          <div class="section-title">${translations.notesTitle}</div>
+          <p>${translations.paymentTerms}</p>
+          <p>${translations.conditions}</p>
         </div>
 
         <div class="footer">
+          <p style="margin-bottom: 10px; font-style: italic;">${translations.vatExemption}</p>
           <div class="section-title">${translations.bankDetails}</div>
           <div class="footer-grid">
             <div>

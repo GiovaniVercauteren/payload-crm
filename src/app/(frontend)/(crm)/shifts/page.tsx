@@ -13,7 +13,7 @@ import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from '@/
 import { Calendar } from 'lucide-react'
 
 export default function ShiftsPage() {
-  const [shifts, setShifts] = useState<Shift[]>([])
+  const [shifts, setShifts] = useState<PaginatedDocs<Shift> | null>(null)
   const tCommon = useTranslations('common')
   const tShifts = useTranslations('shifts')
   const tShiftsCreate = useTranslations('shifts.create')

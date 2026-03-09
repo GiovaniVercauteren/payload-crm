@@ -29,7 +29,7 @@ import { getUninvoicedShiftsAction } from '../actions'
 import { getClientsAction } from '../../clients/actions'
 
 const formSchema = z.object({
-  invoiceNumber: z.string().min(1, 'Invoice number is required'),
+  invoiceNumber: z.string().optional(),
   client: z.number(),
   shifts: z.array(z.number()).min(1, 'Select at least one shift'),
   user: z.union([z.number(), z.any()]),
@@ -55,7 +55,7 @@ export default function InvoiceForm({
 
   const form = useForm({
     defaultValues: (initialValues || {
-      invoiceNumber: `OZ-${new Date().getTime()}`,
+      invoiceNumber: '',
       client: 0,
       shifts: [],
       user: 0,
@@ -112,6 +112,7 @@ export default function InvoiceForm({
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
+                        placeholder={tInvoices('invoiceNumberPlaceholder')}
                       />
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
@@ -179,7 +180,7 @@ export default function InvoiceForm({
                 return (
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">{tInvoices('totalAmount')}</span>
-                    <span className="text-2xl font-bold">€{total.toFixed(2)}</span>
+                    <span className="text-2xl font-bold">€{total.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                 )
               }}
@@ -266,7 +267,7 @@ function ShiftSelector({
                     htmlFor={`shift-${shift.id}`}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    {new Date(shift.startDate).toLocaleString()} - €{shift.totalPrice.toFixed(2)}
+                    {new Date(shift.startDate).toLocaleString()} - €{shift.totalPrice.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </label>
                 </div>
               ))}

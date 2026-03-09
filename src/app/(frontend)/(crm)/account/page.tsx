@@ -23,6 +23,7 @@ import { LogoUpload } from './_components/logo-upload'
 const formSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
+  nickname: z.string().optional().nullable(),
   phone: z.string().min(1),
   company: z.string().min(1),
   logo: z.any().optional().nullable(),
@@ -76,6 +77,7 @@ function AccountForm({ user }: { user: User }) {
     defaultValues: {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
+      nickname: user.nickname || '',
       phone: user.phone || '',
       company: user.company || '',
       logo: user.logo || null,
@@ -139,6 +141,18 @@ function AccountForm({ user }: { user: User }) {
                     <FieldLabel>{tAccount('lastName')}</FieldLabel>
                     <Input
                       value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </FormObj.Field>
+              <FormObj.Field name="nickname">
+                {(field: any) => (
+                  <Field>
+                    <FieldLabel>{tAccount('nickname')}</FieldLabel>
+                    <Input
+                      value={field.state.value || ''}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
                     <FieldError errors={field.state.meta.errors} />

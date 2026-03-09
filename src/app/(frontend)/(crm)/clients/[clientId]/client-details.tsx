@@ -84,7 +84,7 @@ export default function ClientDetails({ client }: ClientDetailsProps) {
             </div>
             <div className="space-y-1">
               <Label className="text-muted-foreground">{t('defaultRate')}</Label>
-              <p>{client.defaultRate ? `€${client.defaultRate.toFixed(2)}` : '-'}</p>
+              <p>{client.defaultRate ? `€${client.defaultRate.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/${tCommon('hoursUnit')}` : '-'}</p>
             </div>
           </div>
         </div>

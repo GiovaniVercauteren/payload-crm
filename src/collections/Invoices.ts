@@ -57,6 +57,52 @@ const setUserOnCreate: CollectionBeforeChangeHook = async ({ data, req, operatio
   return data
 }
 
+const generateInvoiceNumber: CollectionBeforeChangeHook = async ({
+  data,
+  req,
+  operation,
+}) => {
+  if (operation === 'create' && (!data.invoiceNumber || data.invoiceNumber.startsWith('OZ-'))) {
+    const now = new Date()
+    const year = now.getFullYear()
+    
+    // Find the latest invoice for this user in the current year
+    const latestInvoices = await req.payload.find({
+      collection: 'invoices',
+      where: {
+        and: [
+          {
+            user: {
+              equals: req.user?.id,
+            },
+          },
+          {
+            invoiceNumber: {
+              like: `OZ-${year}-%`,
+            },
+          },
+        ],
+      },
+      sort: '-invoiceNumber',
+      limit: 1,
+      req,
+    })
+
+    let nextNumber = 1
+    if (latestInvoices.docs.length > 0) {
+      const lastInvoiceNumber = latestInvoices.docs[0].invoiceNumber
+      const parts = lastInvoiceNumber.split('-')
+      const lastCount = parseInt(parts[parts.length - 1], 10)
+      if (!isNaN(lastCount)) {
+        nextNumber = lastCount + 1
+      }
+    }
+
+    data.invoiceNumber = `OZ-${year}-${nextNumber.toString().padStart(3, '0')}`
+  }
+  return data
+}
+
 const calculateTotalAmount: CollectionBeforeChangeHook = async ({
   data,
   req,
@@ -175,7 +221,7 @@ export const Invoices: CollectionConfig<'invoices'> = {
     delete: invoiceDeleteAccess,
   },
   hooks: {
-    beforeChange: [setUserOnCreate, calculateTotalAmount],
+    beforeChange: [setUserOnCreate, generateInvoiceNumber, calculateTotalAmount],
     afterChange: [createOrUpdateShiftInvoiceRelation],
     afterDelete: [deleteInvoiceFromShifts],
   },

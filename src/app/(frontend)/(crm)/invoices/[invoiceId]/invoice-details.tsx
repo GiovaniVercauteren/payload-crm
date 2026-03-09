@@ -62,6 +62,9 @@ export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
     }
   }
 
+  const nlBE = 'nl-BE'
+  const timeZone = 'Europe/Brussels'
+
   return (
     <Card className="max-w-4xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -88,7 +91,7 @@ export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <Label className="text-muted-foreground">{t('date')}</Label>
-            <p>{format.dateTime(new Date(invoice.createdAt), { dateStyle: 'medium' })}</p>
+            <p>{new Date(invoice.createdAt).toLocaleDateString(nlBE, { timeZone })}</p>
           </div>
           <div className="space-y-1 text-right">
             <Label className="text-muted-foreground">{t('totalAmount')}</Label>
@@ -97,6 +100,8 @@ export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
             </p>
           </div>
         </div>
+
+        <p className="text-sm italic text-muted-foreground">{t('vatExemption')}</p>
 
         <Separator />
 
@@ -129,17 +134,17 @@ export default function InvoiceDetails({ invoice }: InvoiceDetailsProps) {
                   (!shift.customRate && service.rateType === 'hourly')
                 ) {
                   const rate = shift.customRate || service.rate
-                  rateStr = format.number(rate, { style: 'currency', currency: 'EUR' }) + '/h'
+                  rateStr = format.number(rate, { style: 'currency', currency: 'EUR' }) + '/' + tCommon('hoursUnit')
                 }
 
                 return (
                   <TableRow key={shift.id}>
-                    <TableCell>{format.dateTime(start, { dateStyle: 'medium' })}</TableCell>
+                    <TableCell>{start.toLocaleDateString(nlBE, { timeZone })}</TableCell>
                     <TableCell className="whitespace-nowrap">
-                      {format.dateTime(start, { hour: '2-digit', minute: '2-digit', hour12: false })} -{' '}
-                      {format.dateTime(end, { hour: '2-digit', minute: '2-digit', hour12: false })}
+                      {start.toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone })} -{' '}
+                      {end.toLocaleTimeString(nlBE, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone })}
                     </TableCell>
-                    <TableCell className="text-center">{netHours.toFixed(2)}h</TableCell>
+                    <TableCell className="text-center">{netHours.toLocaleString(nlBE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{tCommon('hoursUnit')}</TableCell>
                     <TableCell className="text-center">{shift.breakDuration || 0}m</TableCell>
                     <TableCell>{service.name}</TableCell>
                     <TableCell className="text-right">{rateStr}</TableCell>
