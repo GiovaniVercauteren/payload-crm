@@ -210,5 +210,43 @@
       "updateSuccess": "Account updated successfully.",
       "updateError": "Failed to update account."
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back to your Oasezorg CRM dashboard.",
+    "accessDenied": "Access Denied",
+    "pleaseLogin": "Please log in to view the dashboard.",
+    "stats": {
+      "totalClients": "Total Clients",
+      "totalClientsDesc": "Total clients registered",
+      "upcomingShifts": "Upcoming Shifts",
+      "upcomingShiftsDesc": "Scheduled shifts for the future",
+      "totalInvoices": "Total Invoices",
+      "totalInvoicesDesc": "Invoices generated",
+      "totalRevenue": "Total Revenue",
+      "totalRevenueDesc": "Revenue from invoices this month"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "scheduleShift": "Schedule Shift",
+      "scheduleShiftDesc": "Create a new shift for a client",
+      "addClient": "Add Client",
+      "addClientDesc": "Register a new client",
+      "createInvoice": "Create Invoice",
+      "createInvoiceDesc": "Generate a new invoice"
+    },
+    "recentShifts": {
+      "title": "Recent Shifts",
+      "viewAll": "View all",
+      "noShifts": "No recent shifts found.",
+      "unknownClient": "Unknown Client"
+    },
+    "recentInvoices": {
+      "title": "Recent Invoices",
+      "viewAll": "View all",
+      "noInvoices": "No recent invoices found.",
+      "unknownClient": "Unknown Client",
+      "viewDetails": "View Details"
+    }
   }
 }

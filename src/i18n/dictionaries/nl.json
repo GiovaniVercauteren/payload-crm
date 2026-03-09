@@ -210,5 +210,43 @@
       "updateSuccess": "Account succesvol bijgewerkt.",
       "updateError": "Bijwerken account mislukt."
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welkom terug op je Oasezorg CRM dashboard.",
+    "accessDenied": "Toegang geweigerd",
+    "pleaseLogin": "Log in om het dashboard te bekijken.",
+    "stats": {
+      "totalClients": "Totaal aantal klanten",
+      "totalClientsDesc": "Totaal aantal geregistreerde klanten",
+      "upcomingShifts": "Aankomende diensten",
+      "upcomingShiftsDesc": "Geplande diensten voor de toekomst",
+      "totalInvoices": "Totaal aantal facturen",
+      "totalInvoicesDesc": "Gegenereerde facturen",
+      "totalRevenue": "Totale omzet",
+      "totalRevenueDesc": "Omzet uit facturen van deze maand"
+    },
+    "quickActions": {
+      "title": "Snelkoppelingen",
+      "scheduleShift": "Dienst inplannen",
+      "scheduleShiftDesc": "Maak een nieuwe dienst aan voor een klant",
+      "addClient": "Klant toevoegen",
+      "addClientDesc": "Registreer een nieuwe klant",
+      "createInvoice": "Factuur maken",
+      "createInvoiceDesc": "Genereer een nieuwe factuur"
+    },
+    "recentShifts": {
+      "title": "Recente diensten",
+      "viewAll": "Bekijk alles",
+      "noShifts": "Geen recente diensten gevonden.",
+      "unknownClient": "Onbekende klant"
+    },
+    "recentInvoices": {
+      "title": "Recente facturen",
+      "viewAll": "Bekijk alles",
+      "noInvoices": "Geen recente facturen gevonden.",
+      "unknownClient": "Onbekende klant",
+      "viewDetails": "Details bekijken"
+    }
   }
 }
