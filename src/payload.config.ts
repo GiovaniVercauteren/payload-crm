@@ -15,6 +15,7 @@ import { Services } from './collections/Services'
 import { Shifts } from './collections/Shifts'
 import { Invoices } from './collections/Invoices'
 import { Logs } from './collections/Logs'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -36,6 +37,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: [],
