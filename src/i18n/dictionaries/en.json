@@ -248,5 +248,31 @@
       "unknownClient": "Unknown Client",
       "viewDetails": "View Details"
     }
+  },
+  "landing": {
+    "hero": {
+      "title": "Streamline Your Care Management",
+      "subtitle": "Oasezorg CRM helps independent healthcare professionals manage clients, schedules, and invoices in one beautiful place.",
+      "cta": "Get Started",
+      "dashboard": "Go to Dashboard"
+    },
+    "features": {
+      "clients": {
+        "title": "Client Management",
+        "description": "Keep all your client information, notes, and history organized and accessible."
+      },
+      "shifts": {
+        "title": "Easy Scheduling",
+        "description": "Plan your shifts with ease, track hours, and manage your availability effortlessly."
+      },
+      "invoices": {
+        "title": "Automated Invoicing",
+        "description": "Generate professional PDF invoices with a single click, perfectly calculated every time."
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved.",
+      "builtWith": "Built with passion for care."
+    }
   }
 }

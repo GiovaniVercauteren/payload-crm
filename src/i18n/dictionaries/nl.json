@@ -248,5 +248,31 @@
       "unknownClient": "Onbekende klant",
       "viewDetails": "Details bekijken"
     }
+  },
+  "landing": {
+    "hero": {
+      "title": "Stroomlijn je zorgmanagement",
+      "subtitle": "Oasezorg CRM helpt zelfstandige zorgprofessionals om klanten, schema's en facturen op één mooie plek te beheren.",
+      "cta": "Aan de slag",
+      "dashboard": "Ga naar Dashboard"
+    },
+    "features": {
+      "clients": {
+        "title": "Klantbeheer",
+        "description": "Houd al je klantinformatie, notities en geschiedenis georganiseerd en toegankelijk."
+      },
+      "shifts": {
+        "title": "Eenvoudige planning",
+        "description": "Plan je diensten met gemak, houd uren bij en beheer je beschikbaarheid moeiteloos."
+      },
+      "invoices": {
+        "title": "Geautomatiseerde facturatie",
+        "description": "Genereer met één klik professionele PDF-facturen, elke keer perfect berekend."
+      }
+    },
+    "footer": {
+      "rights": "Alle rechten voorbehouden.",
+      "builtWith": "Gebouwd met passie voor de zorg."
+    }
   }
 }
