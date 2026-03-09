@@ -60,7 +60,7 @@ export default function InvoiceForm({
       shifts: [],
       user: 0,
       totalAmount: 0,
-    }) as CreateData<Invoice>,
+    }) as any,
     validators: {
       onSubmit: formSchema,
     },
@@ -180,7 +180,13 @@ export default function InvoiceForm({
                 return (
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">{tInvoices('totalAmount')}</span>
-                    <span className="text-2xl font-bold">€{total.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-2xl font-bold">
+                      €
+                      {total.toLocaleString('nl-BE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
                   </div>
                 )
               }}
@@ -267,7 +273,11 @@ function ShiftSelector({
                     htmlFor={`shift-${shift.id}`}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    {new Date(shift.startDate).toLocaleString()} - €{shift.totalPrice.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {new Date(shift.startDate).toLocaleString()} - €
+                    {shift.totalPrice.toLocaleString('nl-BE', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </label>
                 </div>
               ))}

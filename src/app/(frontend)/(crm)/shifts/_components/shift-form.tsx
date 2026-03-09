@@ -54,16 +54,11 @@ interface ShiftFormProps {
   submitText: string
 }
 
-export default function ShiftForm({
-  initialValues,
-  onSubmit,
-  title,
-  submitText,
-}: ShiftFormProps) {
+export default function ShiftForm({ initialValues, onSubmit, title, submitText }: ShiftFormProps) {
   const router = useRouter()
   const [clients, setClients] = useState<Client[]>([])
   const [services, setServices] = useState<Service[]>([])
-  
+
   const form = useForm({
     defaultValues: (initialValues || {
       client: 0,
@@ -76,7 +71,7 @@ export default function ShiftForm({
       notes: '',
       status: 'scheduled',
       worker: 0,
-    }) as CreateData<Shift>,
+    }) as any,
     validators: {
       onSubmit: formSchema,
     },
@@ -96,10 +91,7 @@ export default function ShiftForm({
 
   useEffect(() => {
     const fetchData = async () => {
-      const [clientsRes, servicesRes] = await Promise.all([
-        getClientsAction(),
-        getServicesAction(),
-      ])
+      const [clientsRes, servicesRes] = await Promise.all([getClientsAction(), getServicesAction()])
       setClients(clientsRes.docs)
       setServices(servicesRes.docs)
     }
@@ -192,7 +184,11 @@ export default function ShiftForm({
                         type="number"
                         step="0.01"
                         value={field.state.value || ''}
-                        onChange={(e) => field.handleChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                        onChange={(e) =>
+                          field.handleChange(
+                            e.target.value === '' ? undefined : Number(e.target.value),
+                          )
+                        }
                         aria-invalid={isInvalid}
                       />
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -214,7 +210,9 @@ export default function ShiftForm({
                         aria-invalid={isInvalid}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder={tShiftsCreate('selectRateType') || 'Select rate type'} />
+                          <SelectValue
+                            placeholder={tShiftsCreate('selectRateType') || 'Select rate type'}
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           {rateTypes.map((type) => (

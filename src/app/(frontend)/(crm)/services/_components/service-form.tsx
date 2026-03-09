@@ -58,7 +58,7 @@ export default function ServiceForm({
       description: '',
       deprecated: false,
       user: 0,
-    }) as CreateData<Service>,
+    }) as any,
     validators: {
       onSubmit: formSchema,
     },

@@ -79,7 +79,7 @@ export default function ClientForm({
       notes: '',
       defaultRate: undefined,
       user: 0,
-    }) as CreateData<Client>,
+    }) as any,
     validators: {
       onSubmit: formSchema,
     },
